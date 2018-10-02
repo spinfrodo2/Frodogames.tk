@@ -29,6 +29,7 @@ namespace pocketmine\level\format;
 use pocketmine\block\BlockFactory;
 use pocketmine\entity\Entity;
 use pocketmine\entity\EntityFactory;
+use pocketmine\level\format\io\SubChunkConverter;
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\NetworkBinaryStream;
@@ -769,17 +770,15 @@ class Chunk{
 		$subChunkCount = $this->getSubChunkSendCount();
 		$stream->putByte($subChunkCount);
 
+		if(empty(BlockFactory::$staticRuntimeIdMap)){
+			BlockFactory::registerStaticRuntimeIdMappings();
+		}
 
 		for($subY = 0; $subY < $subChunkCount; ++$subY){
-			$converted = new PalettedBlockArray();
-			$legacy = $this->subChunks[$subY];
+			$converted = SubChunkConverter::convertSubChunkXZY($this->subChunks[$subY]->getBlockIdArray(), $this->subChunks[$subY]->getBlockDataArray());
 
-			for($x = 0; $x < 16; ++$x){
-				for($z = 0; $z < 16; ++$z){
-					for($y = 0; $y < 16; ++$y){
-						$converted->set($x, $y, $z, BlockFactory::toStaticRuntimeId($legacy->getBlockId($x, $y, $z), $legacy->getBlockData($x, $y, $z)));
-					}
-				}
+			foreach($converted->getPalette() as $k => $entry){
+				$converted->replace($k, BlockFactory::legacyFullIdToRuntime($entry));
 			}
 
 			$stream->putByte(8); //subchunk version
