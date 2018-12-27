@@ -174,6 +174,9 @@ class Block extends Position implements BlockIds, Metadatable{
 
 	public function writeStateToWorld() : void{
 		$this->level->getChunkAtPosition($this)->setBlock($this->x & 0xf, $this->y, $this->z & 0xf, $this->getId(), $this->getDamage());
+		if(($existing = $this->level->getTile($this)) !== null){ //TODO: what if the block's state only changed and not the entire block?
+			$existing->close();
+		}
 		$tileType = $this->getTileClass();
 		if($tileType !== null){
 			$this->level->addTile(Tile::create($tileType, $this->level, $this->asVector3()));
