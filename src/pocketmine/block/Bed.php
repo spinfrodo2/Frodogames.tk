@@ -83,13 +83,17 @@ class Bed extends Transparent{
 		}
 	}
 
+	protected function getTileClass() : ?string{
+		return TileBed::class;
+	}
+
 	public function writeStateToWorld() : void{
 		parent::writeStateToWorld();
 		//extra block properties storage hack
-		/** @var TileBed $tile */
-		$tile = Tile::create(TileBed::class, $this->getLevel(), $this->asVector3());
-		$tile->setColor($this->color);
-		$this->level->addTile($tile);
+		$tile = $this->level->getTile($this);
+		if($tile instanceof TileBed){
+			$tile->setColor($this->color);
+		}
 	}
 
 	public function getHardness() : float{

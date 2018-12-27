@@ -29,7 +29,6 @@ use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\tile\Furnace as TileFurnace;
-use pocketmine\tile\Tile;
 
 class Furnace extends Solid{
 
@@ -58,6 +57,10 @@ class Furnace extends Solid{
 
 	public function getStateBitmask() : int{
 		return 0b111;
+	}
+
+	protected function getTileClass() : ?string{
+		return TileFurnace::class;
 	}
 
 	public function getName() : string{
@@ -98,12 +101,8 @@ class Furnace extends Solid{
 		if($player !== null){
 			$this->facing = Facing::opposite($player->getHorizontalFacing());
 		}
-		if(parent::place($item, $blockReplace, $blockClicked, $face, $clickVector, $player)){
-			$this->level->addTile(Tile::createFromItem(TileFurnace::class, $this->getLevel(), $this->asVector3(), $item));
-			return true;
-		}
 
-		return false;
+		return parent::place($item, $blockReplace, $blockClicked, $face, $clickVector, $player);
 	}
 
 	public function onActivate(Item $item, Player $player = null) : bool{

@@ -35,7 +35,7 @@ use pocketmine\nbt\tag\StringTag;
 class Banner extends Spawnable implements Nameable{
 	use NameableTrait {
 		addAdditionalSpawnData as addNameSpawnData;
-		copyDataFromItem as copyNameFromItem;
+		copyDataFromItem as protected copyNameFromItem;
 	}
 
 	public const TAG_BASE = "Base";
@@ -130,7 +130,7 @@ class Banner extends Spawnable implements Nameable{
 		$this->addNameSpawnData($nbt);
 	}
 
-	protected function copyDataFromItem(Item $item) : void{
+	public function copyDataFromItem(Item $item) : void{
 		parent::copyDataFromItem($item);
 		$this->copyNameFromItem($item);
 		if($item instanceof ItemBanner){

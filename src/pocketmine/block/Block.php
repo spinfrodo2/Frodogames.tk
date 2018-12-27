@@ -40,6 +40,7 @@ use pocketmine\metadata\Metadatable;
 use pocketmine\metadata\MetadataValue;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
+use pocketmine\tile\Tile;
 
 class Block extends Position implements BlockIds, Metadatable{
 
@@ -162,8 +163,21 @@ class Block extends Position implements BlockIds, Metadatable{
 		$this->collisionBoxes = null;
 	}
 
+	/**
+	 * Returns the class of Tile associated with this block.
+	 *
+	 * @return string|null class extending Tile, or null
+	 */
+	protected function getTileClass() : ?string{
+		return null;
+	}
+
 	public function writeStateToWorld() : void{
 		$this->level->getChunkAtPosition($this)->setBlock($this->x & 0xf, $this->y, $this->z & 0xf, $this->getId(), $this->getDamage());
+		$tileType = $this->getTileClass();
+		if($tileType !== null){
+			$this->level->addTile(Tile::create($tileType, $this->level, $this->asVector3()));
+		}
 	}
 
 	/**

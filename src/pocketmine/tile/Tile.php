@@ -95,22 +95,6 @@ abstract class Tile extends Position{
 	}
 
 	/**
-	 * @param string  $baseClass
-	 * @param Level   $level
-	 * @param Vector3 $pos
-	 * @param Item    $item
-	 *
-	 * @return Tile (instanceof $baseClass)
-	 * @throws \InvalidArgumentException if the base class is not a registered tile
-	 */
-	public static function createFromItem(string $baseClass, Level $level, Vector3 $pos, Item $item) : Tile{
-		$tile = self::create($baseClass, $level, $pos);
-		$tile->copyDataFromItem($item);
-
-		return $tile;
-	}
-
-	/**
 	 * @param string   $className
 	 * @param string[] $saveNames
 	 */
@@ -217,7 +201,7 @@ abstract class Tile extends Position{
 		return $tag->getCount() > 0 ? $tag : null;
 	}
 
-	protected function copyDataFromItem(Item $item) : void{
+	public function copyDataFromItem(Item $item) : void{
 		if($item->hasCustomBlockData()){ //TODO: check item root tag (MCPE doesn't use BlockEntityTag)
 			$this->readSaveData($item->getCustomBlockData());
 		}

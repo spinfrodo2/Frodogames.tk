@@ -68,13 +68,18 @@ class Skull extends Flowable{
 		}
 	}
 
+	protected function getTileClass() : ?string{
+		return TileSkull::class;
+	}
+
 	public function writeStateToWorld() : void{
 		parent::writeStateToWorld();
-		/** @var TileSkull $tile */
-		$tile = Tile::create(TileSkull::class, $this->getLevel(), $this->asVector3());
-		$tile->setRotation($this->rotation);
-		$tile->setType($this->type);
-		$this->level->addTile($tile);
+		//extra block properties storage hack
+		$tile = $this->level->getTile($this);
+		if($tile instanceof TileSkull){
+			$tile->setRotation($this->rotation);
+			$tile->setType($this->type);
+		}
 	}
 
 	public function getHardness() : float{
