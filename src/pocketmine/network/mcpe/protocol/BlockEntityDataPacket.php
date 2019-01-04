@@ -29,7 +29,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class BlockEntityDataPacket extends DataPacket{
+class BlockEntityDataPacket extends BasePacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::BLOCK_ENTITY_DATA_PACKET;
 
 	/** @var int */

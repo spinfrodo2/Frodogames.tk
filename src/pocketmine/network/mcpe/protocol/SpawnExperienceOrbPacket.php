@@ -30,7 +30,7 @@ use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class SpawnExperienceOrbPacket extends DataPacket{
+class SpawnExperienceOrbPacket extends BasePacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SPAWN_EXPERIENCE_ORB_PACKET;
 
 	/** @var Vector3 */

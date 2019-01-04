@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class MoveEntityDeltaPacket extends DataPacket{
+class MoveEntityDeltaPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOVE_ENTITY_DELTA_PACKET;
 
 	public const FLAG_HAS_X = 0x01;

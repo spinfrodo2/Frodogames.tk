@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class ServerSettingsRequestPacket extends DataPacket{
+class ServerSettingsRequestPacket extends BasePacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVER_SETTINGS_REQUEST_PACKET;
 
 	protected function decodePayload(NetworkBinaryStream $in) : void{

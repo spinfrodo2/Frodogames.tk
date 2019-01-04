@@ -30,7 +30,7 @@ use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class RespawnPacket extends DataPacket{
+class RespawnPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RESPAWN_PACKET;
 
 	/** @var Vector3 */

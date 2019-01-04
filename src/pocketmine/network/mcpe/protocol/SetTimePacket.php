@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class SetTimePacket extends DataPacket{
+class SetTimePacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_TIME_PACKET;
 
 	/** @var int */

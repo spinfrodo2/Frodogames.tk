@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class NetworkChunkPublisherUpdatePacket extends DataPacket{
+class NetworkChunkPublisherUpdatePacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET;
 
 	/** @var int */

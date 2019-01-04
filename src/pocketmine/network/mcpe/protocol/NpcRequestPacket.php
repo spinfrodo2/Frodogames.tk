@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class NpcRequestPacket extends DataPacket{
+class NpcRequestPacket extends BasePacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::NPC_REQUEST_PACKET;
 
 	/** @var int */

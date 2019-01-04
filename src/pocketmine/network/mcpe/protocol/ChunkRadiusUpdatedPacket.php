@@ -29,7 +29,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class ChunkRadiusUpdatedPacket extends DataPacket{
+class ChunkRadiusUpdatedPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CHUNK_RADIUS_UPDATED_PACKET;
 
 	/** @var int */

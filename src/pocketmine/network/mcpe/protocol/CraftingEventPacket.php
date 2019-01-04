@@ -31,7 +31,7 @@ use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\utils\UUID;
 use function count;
 
-class CraftingEventPacket extends DataPacket{
+class CraftingEventPacket extends BasePacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CRAFTING_EVENT_PACKET;
 
 	/** @var int */

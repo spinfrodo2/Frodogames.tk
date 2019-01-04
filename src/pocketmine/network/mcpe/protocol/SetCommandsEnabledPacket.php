@@ -29,7 +29,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class SetCommandsEnabledPacket extends DataPacket{
+class SetCommandsEnabledPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_COMMANDS_ENABLED_PACKET;
 
 	/** @var bool */

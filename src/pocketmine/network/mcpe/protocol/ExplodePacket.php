@@ -31,7 +31,7 @@ use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 use function count;
 
-class ExplodePacket extends DataPacket{
+class ExplodePacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::EXPLODE_PACKET;
 
 	/** @var Vector3 */

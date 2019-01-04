@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class SetDisplayObjectivePacket extends DataPacket{
+class SetDisplayObjectivePacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_DISPLAY_OBJECTIVE_PACKET;
 
 	/** @var string */

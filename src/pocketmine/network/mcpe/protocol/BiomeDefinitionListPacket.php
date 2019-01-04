@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class BiomeDefinitionListPacket extends DataPacket{
+class BiomeDefinitionListPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::BIOME_DEFINITION_LIST_PACKET;
 
 	/** @var string */

@@ -30,7 +30,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class RiderJumpPacket extends DataPacket{
+class RiderJumpPacket extends BasePacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RIDER_JUMP_PACKET;
 
 	/** @var int */

@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class ShowStoreOfferPacket extends DataPacket{
+class ShowStoreOfferPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SHOW_STORE_OFFER_PACKET;
 
 	/** @var string */

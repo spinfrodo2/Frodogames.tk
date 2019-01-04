@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class ScriptCustomEventPacket extends DataPacket{
+class ScriptCustomEventPacket extends BasePacket{ //TODO: this doesn't have handlers in either client or server in the game as of 1.8
 	public const NETWORK_ID = ProtocolInfo::SCRIPT_CUSTOM_EVENT_PACKET;
 
 	/** @var string */

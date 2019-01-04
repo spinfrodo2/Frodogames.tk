@@ -31,7 +31,7 @@ use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 use function count;
 
-class SetScorePacket extends DataPacket{
+class SetScorePacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_SCORE_PACKET;
 
 	public const TYPE_CHANGE = 0;

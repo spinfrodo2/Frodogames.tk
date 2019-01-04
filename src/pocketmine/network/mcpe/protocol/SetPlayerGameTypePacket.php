@@ -29,7 +29,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class SetPlayerGameTypePacket extends DataPacket{
+class SetPlayerGameTypePacket extends BasePacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_PLAYER_GAME_TYPE_PACKET;
 
 	/** @var int */

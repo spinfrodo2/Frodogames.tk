@@ -29,7 +29,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class AnimatePacket extends DataPacket{
+class AnimatePacket extends BasePacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ANIMATE_PACKET;
 
 	public const ACTION_SWING_ARM = 1;

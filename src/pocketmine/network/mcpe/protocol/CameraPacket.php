@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class CameraPacket extends DataPacket{
+class CameraPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CAMERA_PACKET;
 
 	/** @var int */

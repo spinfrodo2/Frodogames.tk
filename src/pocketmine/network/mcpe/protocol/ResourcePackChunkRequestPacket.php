@@ -30,7 +30,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class ResourcePackChunkRequestPacket extends DataPacket{
+class ResourcePackChunkRequestPacket extends BasePacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACK_CHUNK_REQUEST_PACKET;
 
 	/** @var string */

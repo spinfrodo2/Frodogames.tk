@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class AddHangingEntityPacket extends DataPacket{
+class AddHangingEntityPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_HANGING_ENTITY_PACKET;
 
 	/** @var int|null */

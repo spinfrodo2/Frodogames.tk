@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class EventPacket extends DataPacket{
+class EventPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::EVENT_PACKET;
 
 	public const TYPE_ACHIEVEMENT_AWARDED = 0;

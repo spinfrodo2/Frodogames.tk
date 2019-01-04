@@ -32,7 +32,7 @@ use pocketmine\network\mcpe\protocol\types\ContainerIds;
 /**
  * One of the most useless packets.
  */
-class PlayerHotbarPacket extends DataPacket{
+class PlayerHotbarPacket extends BasePacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAYER_HOTBAR_PACKET;
 
 	/** @var int */

@@ -29,7 +29,7 @@ use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 use function count;
 
-class UpdateSoftEnumPacket extends DataPacket{
+class UpdateSoftEnumPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_SOFT_ENUM_PACKET;
 
 	public const TYPE_ADD = 0;

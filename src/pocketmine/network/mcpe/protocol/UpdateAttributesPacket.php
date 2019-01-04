@@ -31,7 +31,7 @@ use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 use function array_values;
 
-class UpdateAttributesPacket extends DataPacket{
+class UpdateAttributesPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_ATTRIBUTES_PACKET;
 
 	/** @var int */

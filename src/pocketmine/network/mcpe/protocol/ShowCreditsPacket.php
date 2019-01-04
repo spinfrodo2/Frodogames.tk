@@ -30,7 +30,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class ShowCreditsPacket extends DataPacket{
+class ShowCreditsPacket extends BasePacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SHOW_CREDITS_PACKET;
 
 	public const STATUS_START_CREDITS = 0;

@@ -29,7 +29,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class ContainerOpenPacket extends DataPacket{
+class ContainerOpenPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CONTAINER_OPEN_PACKET;
 
 	/** @var int */

@@ -38,7 +38,7 @@ use pocketmine\network\mcpe\protocol\types\UseItemTransactionData;
 /**
  * This packet effectively crams multiple packets into one.
  */
-class InventoryTransactionPacket extends DataPacket{
+class InventoryTransactionPacket extends BasePacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::INVENTORY_TRANSACTION_PACKET;
 
 	public const TYPE_NORMAL = 0;

@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class GameRulesChangedPacket extends DataPacket{
+class GameRulesChangedPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::GAME_RULES_CHANGED_PACKET;
 
 	/** @var array */

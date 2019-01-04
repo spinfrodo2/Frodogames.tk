@@ -29,7 +29,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class PlayerActionPacket extends DataPacket{
+class PlayerActionPacket extends BasePacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAYER_ACTION_PACKET;
 
 	public const ACTION_START_BREAK = 0;

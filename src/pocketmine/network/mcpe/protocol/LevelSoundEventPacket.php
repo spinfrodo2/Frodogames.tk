@@ -29,7 +29,7 @@ use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class LevelSoundEventPacket extends DataPacket{
+class LevelSoundEventPacket extends BasePacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::LEVEL_SOUND_EVENT_PACKET;
 
 	public const SOUND_ITEM_USE_ON = 0;

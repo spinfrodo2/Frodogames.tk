@@ -29,7 +29,7 @@ use pocketmine\item\Item;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class InventorySlotPacket extends DataPacket{
+class InventorySlotPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::INVENTORY_SLOT_PACKET;
 
 	/** @var int */

@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class WSConnectPacket extends DataPacket{
+class WSConnectPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::W_S_CONNECT_PACKET;
 
 	/** @var string */

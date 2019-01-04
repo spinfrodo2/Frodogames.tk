@@ -31,7 +31,7 @@ use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\utils\BinaryDataException;
 use function get_class;
 
-abstract class DataPacket{
+abstract class BasePacket implements Packet{
 
 	public const NETWORK_ID = 0;
 

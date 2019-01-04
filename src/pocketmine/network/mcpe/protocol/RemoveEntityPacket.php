@@ -29,7 +29,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class RemoveEntityPacket extends DataPacket{
+class RemoveEntityPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::REMOVE_ENTITY_PACKET;
 
 	/** @var int */

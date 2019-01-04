@@ -29,7 +29,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class MobEffectPacket extends DataPacket{
+class MobEffectPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOB_EFFECT_PACKET;
 
 	public const EVENT_ADD = 1;

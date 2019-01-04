@@ -31,7 +31,7 @@ use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\resourcepacks\ResourcePack;
 use function count;
 
-class ResourcePacksInfoPacket extends DataPacket{
+class ResourcePacksInfoPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACKS_INFO_PACKET;
 
 	/** @var bool */

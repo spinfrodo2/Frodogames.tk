@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class UpdateEquipPacket extends DataPacket{
+class UpdateEquipPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_EQUIP_PACKET;
 
 	/** @var int */

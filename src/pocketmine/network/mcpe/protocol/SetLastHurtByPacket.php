@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class SetLastHurtByPacket extends DataPacket{
+class SetLastHurtByPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_LAST_HURT_BY_PACKET;
 
 	/** @var int */

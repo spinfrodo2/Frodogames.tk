@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class PhotoTransferPacket extends DataPacket{
+class PhotoTransferPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PHOTO_TRANSFER_PACKET;
 
 	/** @var string */

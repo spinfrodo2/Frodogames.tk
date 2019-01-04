@@ -30,7 +30,7 @@ use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class MoveEntityAbsolutePacket extends DataPacket{
+class MoveEntityAbsolutePacket extends BasePacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOVE_ENTITY_ABSOLUTE_PACKET;
 
 	public const FLAG_GROUND = 0x01;

@@ -34,10 +34,11 @@ use pocketmine\network\mcpe\handler\PreSpawnSessionHandler;
 use pocketmine\network\mcpe\handler\ResourcePacksSessionHandler;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\handler\SimpleSessionHandler;
-use pocketmine\network\mcpe\protocol\DataPacket;
+use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\DisconnectPacket;
 use pocketmine\network\mcpe\protocol\PacketPool;
 use pocketmine\network\mcpe\protocol\PlayStatusPacket;
+use pocketmine\network\mcpe\protocol\ServerboundPacket;
 use pocketmine\network\mcpe\protocol\ServerToClientHandshakePacket;
 use pocketmine\network\NetworkInterface;
 use pocketmine\Player;
@@ -218,6 +219,12 @@ class NetworkSession{
 	 */
 	public function handleDataPacket(NetworkBinaryStream $buffer) : void{
 		$packet = PacketPool::getPacket($buffer);
+		if(!($packet instanceof ServerboundPacket)){
+			//TODO: ban IP (sending packets like this is an attack)
+			$this->server->getLogger()->debug("Unexpected " . $packet->getName() . " from " . $this->ip . " " . $this->port . ": 0x" . bin2hex($buffer->getBuffer()));
+			$this->disconnect("Unexpected non-serverbound packet");
+			return;
+		}
 
 		$timings = Timings::getReceiveDataPacketTimings($packet);
 		$timings->startTiming();
@@ -242,7 +249,7 @@ class NetworkSession{
 		$timings->stopTiming();
 	}
 
-	public function sendDataPacket(DataPacket $packet, bool $immediate = false) : bool{
+	public function sendDataPacket(ClientboundPacket $packet, bool $immediate = false) : bool{
 		$timings = Timings::getSendDataPacketTimings($packet);
 		$timings->startTiming();
 		try{

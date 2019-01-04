@@ -35,7 +35,7 @@ use pocketmine\network\mcpe\protocol\types\EntityLink;
 use function array_search;
 use function count;
 
-class AddEntityPacket extends DataPacket{
+class AddEntityPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_ENTITY_PACKET;
 
 	/*

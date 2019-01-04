@@ -31,7 +31,7 @@ use pocketmine\network\mcpe\protocol\types\CommandOriginData;
 use pocketmine\network\mcpe\protocol\types\CommandOutputMessage;
 use function count;
 
-class CommandOutputPacket extends DataPacket{
+class CommandOutputPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::COMMAND_OUTPUT_PACKET;
 
 	/** @var CommandOriginData */

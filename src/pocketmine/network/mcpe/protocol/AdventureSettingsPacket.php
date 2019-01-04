@@ -30,7 +30,7 @@ use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\protocol\types\PlayerPermissions;
 
-class AdventureSettingsPacket extends DataPacket{
+class AdventureSettingsPacket extends BasePacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADVENTURE_SETTINGS_PACKET;
 
 	public const PERMISSION_NORMAL = 0;

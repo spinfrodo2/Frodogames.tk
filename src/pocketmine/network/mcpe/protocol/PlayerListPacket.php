@@ -32,7 +32,7 @@ use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\protocol\types\PlayerListEntry;
 use function count;
 
-class PlayerListPacket extends DataPacket{
+class PlayerListPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAYER_LIST_PACKET;
 
 	public const TYPE_ADD = 0;

@@ -29,7 +29,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class ServerToClientHandshakePacket extends DataPacket{
+class ServerToClientHandshakePacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVER_TO_CLIENT_HANDSHAKE_PACKET;
 
 	/**

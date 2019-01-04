@@ -30,7 +30,7 @@ use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class MovePlayerPacket extends DataPacket{
+class MovePlayerPacket extends BasePacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOVE_PLAYER_PACKET;
 
 	public const MODE_NORMAL = 0;

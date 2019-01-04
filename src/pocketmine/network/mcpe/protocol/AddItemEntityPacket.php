@@ -30,7 +30,7 @@ use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class AddItemEntityPacket extends DataPacket{
+class AddItemEntityPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_ITEM_ENTITY_PACKET;
 
 	/** @var int|null */

@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class ItemFrameDropItemPacket extends DataPacket{
+class ItemFrameDropItemPacket extends BasePacket implements ServerboundPacket{
 
 	public const NETWORK_ID = ProtocolInfo::ITEM_FRAME_DROP_ITEM_PACKET;
 

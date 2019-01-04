@@ -30,7 +30,7 @@ use pocketmine\item\Item;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class MobArmorEquipmentPacket extends DataPacket{
+class MobArmorEquipmentPacket extends BasePacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOB_ARMOR_EQUIPMENT_PACKET;
 
 	/** @var int */

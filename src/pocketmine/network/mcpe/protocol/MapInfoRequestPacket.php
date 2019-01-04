@@ -30,7 +30,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class MapInfoRequestPacket extends DataPacket{
+class MapInfoRequestPacket extends BasePacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MAP_INFO_REQUEST_PACKET;
 
 	/** @var int */

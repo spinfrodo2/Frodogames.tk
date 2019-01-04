@@ -73,7 +73,7 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\ChunkRequestTask;
 use pocketmine\network\mcpe\CompressBatchPromise;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
-use pocketmine\network\mcpe\protocol\DataPacket;
+use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\SetDifficultyPacket;
@@ -180,9 +180,9 @@ class Level implements ChunkManager, Metadatable{
 	/** @var Player[][] */
 	private $playerLoaders = [];
 
-	/** @var DataPacket[][] */
+	/** @var ClientboundPacket[][] */
 	private $chunkPackets = [];
-	/** @var DataPacket[] */
+	/** @var ClientboundPacket[] */
 	private $globalPackets = [];
 
 	/** @var float[] */
@@ -595,14 +595,14 @@ class Level implements ChunkManager, Metadatable{
 	}
 
 	/**
-	 * Queues a DataPacket to be sent to all players using the chunk at the specified X/Z coordinates at the end of the
+	 * Queues a packet to be sent to all players using the chunk at the specified X/Z coordinates at the end of the
 	 * current tick.
 	 *
-	 * @param int        $chunkX
-	 * @param int        $chunkZ
-	 * @param DataPacket $packet
+	 * @param int               $chunkX
+	 * @param int               $chunkZ
+	 * @param ClientboundPacket $packet
 	 */
-	public function addChunkPacket(int $chunkX, int $chunkZ, DataPacket $packet){
+	public function addChunkPacket(int $chunkX, int $chunkZ, ClientboundPacket $packet){
 		if(!isset($this->chunkPackets[$index = Level::chunkHash($chunkX, $chunkZ)])){
 			$this->chunkPackets[$index] = [$packet];
 		}else{
@@ -613,19 +613,19 @@ class Level implements ChunkManager, Metadatable{
 	/**
 	 * Broadcasts a packet to every player who has the target position within their view distance.
 	 *
-	 * @param Vector3    $pos
-	 * @param DataPacket $packet
+	 * @param Vector3           $pos
+	 * @param ClientboundPacket $packet
 	 */
-	public function broadcastPacketToViewers(Vector3 $pos, DataPacket $packet) : void{
+	public function broadcastPacketToViewers(Vector3 $pos, ClientboundPacket $packet) : void{
 		$this->addChunkPacket($pos->getFloorX() >> 4, $pos->getFloorZ() >> 4, $packet);
 	}
 
 	/**
 	 * Broadcasts a packet to every player in the level.
 	 *
-	 * @param DataPacket $packet
+	 * @param ClientboundPacket $packet
 	 */
-	public function broadcastGlobalPacket(DataPacket $packet) : void{
+	public function broadcastGlobalPacket(ClientboundPacket $packet) : void{
 		$this->globalPackets[] = $packet;
 	}
 

@@ -32,7 +32,7 @@ use pocketmine\network\mcpe\NetworkBinaryStream;
 /**
  * Useless leftover from a 1.8 refactor, does nothing
  */
-class LevelSoundEventPacketV1 extends DataPacket{
+class LevelSoundEventPacketV1 extends BasePacket{
 	public const NETWORK_ID = ProtocolInfo::LEVEL_SOUND_EVENT_PACKET_V1;
 
 	/** @var int */

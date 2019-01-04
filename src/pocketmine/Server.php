@@ -75,7 +75,7 @@ use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\NetworkCipher;
 use pocketmine\network\mcpe\NetworkCompression;
 use pocketmine\network\mcpe\NetworkSession;
-use pocketmine\network\mcpe\protocol\DataPacket;
+use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\PlayerListPacket;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\types\PlayerListEntry;
@@ -1535,18 +1535,18 @@ class Server{
 	/**
 	 * Broadcasts a Minecraft packet to a list of players
 	 *
-	 * @param Player[]   $players
-	 * @param DataPacket $packet
+	 * @param Player[]          $players
+	 * @param ClientboundPacket $packet
 	 *
 	 * @return bool
 	 */
-	public function broadcastPacket(array $players, DataPacket $packet) : bool{
+	public function broadcastPacket(array $players, ClientboundPacket $packet) : bool{
 		return $this->broadcastPackets($players, [$packet]);
 	}
 
 	/**
-	 * @param Player[]     $players
-	 * @param DataPacket[] $packets
+	 * @param Player[]            $players
+	 * @param ClientboundPacket[] $packets
 	 *
 	 * @return bool
 	 */

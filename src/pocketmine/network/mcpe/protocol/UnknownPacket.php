@@ -30,7 +30,7 @@ use pocketmine\network\mcpe\NetworkBinaryStream;
 use function ord;
 use function strlen;
 
-class UnknownPacket extends DataPacket{
+class UnknownPacket extends BasePacket{
 	public const NETWORK_ID = -1; //Invalid, do not try to write this
 
 	/** @var string */

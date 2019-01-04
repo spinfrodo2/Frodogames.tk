@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class GuiDataPickItemPacket extends DataPacket{
+class GuiDataPickItemPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::GUI_DATA_PICK_ITEM_PACKET;
 
 	/** @var string */

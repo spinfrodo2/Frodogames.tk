@@ -30,7 +30,7 @@ use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 
-class SetEntityLinkPacket extends DataPacket{
+class SetEntityLinkPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_ENTITY_LINK_PACKET;
 
 	/** @var EntityLink */

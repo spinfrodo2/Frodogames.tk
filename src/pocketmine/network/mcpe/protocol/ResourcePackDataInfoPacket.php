@@ -30,7 +30,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class ResourcePackDataInfoPacket extends DataPacket{
+class ResourcePackDataInfoPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACK_DATA_INFO_PACKET;
 
 	/** @var string */

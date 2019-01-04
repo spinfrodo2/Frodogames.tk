@@ -23,30 +23,6 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+interface ClientboundPacket extends Packet{
 
-use pocketmine\network\mcpe\handler\SessionHandler;
-use pocketmine\network\mcpe\NetworkBinaryStream;
-
-class ModalFormRequestPacket extends BasePacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::MODAL_FORM_REQUEST_PACKET;
-
-	/** @var int */
-	public $formId;
-	/** @var string */
-	public $formData; //json
-
-	protected function decodePayload(NetworkBinaryStream $in) : void{
-		$this->formId = $in->getUnsignedVarInt();
-		$this->formData = $in->getString();
-	}
-
-	protected function encodePayload(NetworkBinaryStream $out) : void{
-		$out->putUnsignedVarInt($this->formId);
-		$out->putString($this->formData);
-	}
-
-	public function handle(SessionHandler $handler) : bool{
-		return $handler->handleModalFormRequest($this);
-	}
 }

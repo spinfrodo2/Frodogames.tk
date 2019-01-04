@@ -30,7 +30,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class PlaySoundPacket extends DataPacket{
+class PlaySoundPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAY_SOUND_PACKET;
 
 	/** @var string */

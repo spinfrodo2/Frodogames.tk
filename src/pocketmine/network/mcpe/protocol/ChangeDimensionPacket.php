@@ -30,7 +30,7 @@ use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class ChangeDimensionPacket extends DataPacket{
+class ChangeDimensionPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CHANGE_DIMENSION_PACKET;
 
 	/** @var int */

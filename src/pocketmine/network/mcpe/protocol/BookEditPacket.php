@@ -29,7 +29,7 @@ use pocketmine\network\BadPacketException;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class BookEditPacket extends DataPacket{
+class BookEditPacket extends BasePacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::BOOK_EDIT_PACKET;
 
 	public const TYPE_REPLACE_PAGE = 0;

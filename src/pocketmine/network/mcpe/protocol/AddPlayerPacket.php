@@ -33,7 +33,7 @@ use pocketmine\network\mcpe\protocol\types\EntityLink;
 use pocketmine\utils\UUID;
 use function count;
 
-class AddPlayerPacket extends DataPacket{
+class AddPlayerPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_PLAYER_PACKET;
 
 	/** @var UUID */

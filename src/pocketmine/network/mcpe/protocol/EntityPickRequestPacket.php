@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class EntityPickRequestPacket extends DataPacket{
+class EntityPickRequestPacket extends BasePacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ENTITY_PICK_REQUEST_PACKET;
 
 	/** @var int */

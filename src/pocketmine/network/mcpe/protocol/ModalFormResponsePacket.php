@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class ModalFormResponsePacket extends DataPacket{
+class ModalFormResponsePacket extends BasePacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MODAL_FORM_RESPONSE_PACKET;
 
 	/** @var int */

@@ -29,7 +29,7 @@ use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 use function base64_decode;
 
-class AvailableEntityIdentifiersPacket extends DataPacket{
+class AvailableEntityIdentifiersPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::AVAILABLE_ENTITY_IDENTIFIERS_PACKET;
 
 	/**

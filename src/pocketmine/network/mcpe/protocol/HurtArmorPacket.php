@@ -29,7 +29,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class HurtArmorPacket extends DataPacket{
+class HurtArmorPacket extends BasePacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::HURT_ARMOR_PACKET;
 
 	/** @var int */

@@ -28,7 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
-class NetworkStackLatencyPacket extends DataPacket{
+class NetworkStackLatencyPacket extends BasePacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::NETWORK_STACK_LATENCY_PACKET;
 
 	/** @var int */
