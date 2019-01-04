@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class SetHealthPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_HEALTH_PACKET;
@@ -34,12 +35,12 @@ class SetHealthPacket extends DataPacket{
 	/** @var int */
 	public $health;
 
-	protected function decodePayload() : void{
-		$this->health = $this->getVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->health = $in->getVarInt();
 	}
 
-	protected function encodePayload() : void{
-		$this->putVarInt($this->health);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putVarInt($this->health);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class NetworkStackLatencyPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::NETWORK_STACK_LATENCY_PACKET;
@@ -33,12 +34,12 @@ class NetworkStackLatencyPacket extends DataPacket{
 	/** @var int */
 	public $timestamp;
 
-	protected function decodePayload() : void{
-		$this->timestamp = $this->getLLong();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->timestamp = $in->getLLong();
 	}
 
-	protected function encodePayload() : void{
-		$this->putLLong($this->timestamp);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putLLong($this->timestamp);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

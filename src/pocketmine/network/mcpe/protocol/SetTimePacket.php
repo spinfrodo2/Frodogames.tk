@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class SetTimePacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_TIME_PACKET;
@@ -33,12 +34,12 @@ class SetTimePacket extends DataPacket{
 	/** @var int */
 	public $time;
 
-	protected function decodePayload() : void{
-		$this->time = $this->getVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->time = $in->getVarInt();
 	}
 
-	protected function encodePayload() : void{
-		$this->putVarInt($this->time);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putVarInt($this->time);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

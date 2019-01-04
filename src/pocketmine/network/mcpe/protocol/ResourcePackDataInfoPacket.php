@@ -28,6 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class ResourcePackDataInfoPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACK_DATA_INFO_PACKET;
@@ -43,20 +44,20 @@ class ResourcePackDataInfoPacket extends DataPacket{
 	/** @var string */
 	public $sha256;
 
-	protected function decodePayload() : void{
-		$this->packId = $this->getString();
-		$this->maxChunkSize = $this->getLInt();
-		$this->chunkCount = $this->getLInt();
-		$this->compressedPackSize = $this->getLLong();
-		$this->sha256 = $this->getString();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->packId = $in->getString();
+		$this->maxChunkSize = $in->getLInt();
+		$this->chunkCount = $in->getLInt();
+		$this->compressedPackSize = $in->getLLong();
+		$this->sha256 = $in->getString();
 	}
 
-	protected function encodePayload() : void{
-		$this->putString($this->packId);
-		$this->putLInt($this->maxChunkSize);
-		$this->putLInt($this->chunkCount);
-		$this->putLLong($this->compressedPackSize);
-		$this->putString($this->sha256);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putString($this->packId);
+		$out->putLInt($this->maxChunkSize);
+		$out->putLInt($this->chunkCount);
+		$out->putLLong($this->compressedPackSize);
+		$out->putString($this->sha256);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class SetSpawnPositionPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_SPAWN_POSITION_PACKET;
@@ -45,16 +46,16 @@ class SetSpawnPositionPacket extends DataPacket{
 	/** @var bool */
 	public $spawnForced;
 
-	protected function decodePayload() : void{
-		$this->spawnType = $this->getVarInt();
-		$this->getBlockPosition($this->x, $this->y, $this->z);
-		$this->spawnForced = $this->getBool();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->spawnType = $in->getVarInt();
+		$in->getBlockPosition($this->x, $this->y, $this->z);
+		$this->spawnForced = $in->getBool();
 	}
 
-	protected function encodePayload() : void{
-		$this->putVarInt($this->spawnType);
-		$this->putBlockPosition($this->x, $this->y, $this->z);
-		$this->putBool($this->spawnForced);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putVarInt($this->spawnType);
+		$out->putBlockPosition($this->x, $this->y, $this->z);
+		$out->putBool($this->spawnForced);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

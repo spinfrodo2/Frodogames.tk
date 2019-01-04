@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class AnimatePacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::ANIMATE_PACKET;
@@ -43,19 +44,19 @@ class AnimatePacket extends DataPacket{
 	/** @var float */
 	public $float = 0.0; //TODO (Boat rowing time?)
 
-	protected function decodePayload() : void{
-		$this->action = $this->getVarInt();
-		$this->entityRuntimeId = $this->getEntityRuntimeId();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->action = $in->getVarInt();
+		$this->entityRuntimeId = $in->getEntityRuntimeId();
 		if($this->action & 0x80){
-			$this->float = $this->getLFloat();
+			$this->float = $in->getLFloat();
 		}
 	}
 
-	protected function encodePayload() : void{
-		$this->putVarInt($this->action);
-		$this->putEntityRuntimeId($this->entityRuntimeId);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putVarInt($this->action);
+		$out->putEntityRuntimeId($this->entityRuntimeId);
 		if($this->action & 0x80){
-			$this->putLFloat($this->float);
+			$out->putLFloat($this->float);
 		}
 	}
 

@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class SetCommandsEnabledPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_COMMANDS_ENABLED_PACKET;
@@ -34,12 +35,12 @@ class SetCommandsEnabledPacket extends DataPacket{
 	/** @var bool */
 	public $enabled;
 
-	protected function decodePayload() : void{
-		$this->enabled = $this->getBool();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->enabled = $in->getBool();
 	}
 
-	protected function encodePayload() : void{
-		$this->putBool($this->enabled);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putBool($this->enabled);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

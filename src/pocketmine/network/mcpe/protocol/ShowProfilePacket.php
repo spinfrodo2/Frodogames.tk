@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class ShowProfilePacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SHOW_PROFILE_PACKET;
@@ -33,12 +34,12 @@ class ShowProfilePacket extends DataPacket{
 	/** @var string */
 	public $xuid;
 
-	protected function decodePayload() : void{
-		$this->xuid = $this->getString();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->xuid = $in->getString();
 	}
 
-	protected function encodePayload() : void{
-		$this->putString($this->xuid);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putString($this->xuid);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

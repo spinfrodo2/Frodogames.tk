@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class BossEventPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::BOSS_EVENT_PACKET;
@@ -66,60 +67,60 @@ class BossEventPacket extends DataPacket{
 	/** @var int */
 	public $overlay;
 
-	protected function decodePayload() : void{
-		$this->bossEid = $this->getEntityUniqueId();
-		$this->eventType = $this->getUnsignedVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->bossEid = $in->getEntityUniqueId();
+		$this->eventType = $in->getUnsignedVarInt();
 		switch($this->eventType){
 			case self::TYPE_REGISTER_PLAYER:
 			case self::TYPE_UNREGISTER_PLAYER:
-				$this->playerEid = $this->getEntityUniqueId();
+				$this->playerEid = $in->getEntityUniqueId();
 				break;
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_SHOW:
-				$this->title = $this->getString();
-				$this->healthPercent = $this->getLFloat();
+				$this->title = $in->getString();
+				$this->healthPercent = $in->getLFloat();
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_UNKNOWN_6:
-				$this->unknownShort = $this->getLShort();
+				$this->unknownShort = $in->getLShort();
 			case self::TYPE_TEXTURE:
-				$this->color = $this->getUnsignedVarInt();
-				$this->overlay = $this->getUnsignedVarInt();
+				$this->color = $in->getUnsignedVarInt();
+				$this->overlay = $in->getUnsignedVarInt();
 				break;
 			case self::TYPE_HEALTH_PERCENT:
-				$this->healthPercent = $this->getLFloat();
+				$this->healthPercent = $in->getLFloat();
 				break;
 			case self::TYPE_TITLE:
-				$this->title = $this->getString();
+				$this->title = $in->getString();
 				break;
 			default:
 				break;
 		}
 	}
 
-	protected function encodePayload() : void{
-		$this->putEntityUniqueId($this->bossEid);
-		$this->putUnsignedVarInt($this->eventType);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putEntityUniqueId($this->bossEid);
+		$out->putUnsignedVarInt($this->eventType);
 		switch($this->eventType){
 			case self::TYPE_REGISTER_PLAYER:
 			case self::TYPE_UNREGISTER_PLAYER:
-				$this->putEntityUniqueId($this->playerEid);
+				$out->putEntityUniqueId($this->playerEid);
 				break;
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_SHOW:
-				$this->putString($this->title);
-				$this->putLFloat($this->healthPercent);
+				$out->putString($this->title);
+				$out->putLFloat($this->healthPercent);
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_UNKNOWN_6:
-				$this->putLShort($this->unknownShort);
+				$out->putLShort($this->unknownShort);
 			case self::TYPE_TEXTURE:
-				$this->putUnsignedVarInt($this->color);
-				$this->putUnsignedVarInt($this->overlay);
+				$out->putUnsignedVarInt($this->color);
+				$out->putUnsignedVarInt($this->overlay);
 				break;
 			case self::TYPE_HEALTH_PERCENT:
-				$this->putLFloat($this->healthPercent);
+				$out->putLFloat($this->healthPercent);
 				break;
 			case self::TYPE_TITLE:
-				$this->putString($this->title);
+				$out->putString($this->title);
 				break;
 			default:
 				break;

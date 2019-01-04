@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class BlockEntityDataPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::BLOCK_ENTITY_DATA_PACKET;
@@ -40,14 +41,14 @@ class BlockEntityDataPacket extends DataPacket{
 	/** @var string */
 	public $namedtag;
 
-	protected function decodePayload() : void{
-		$this->getBlockPosition($this->x, $this->y, $this->z);
-		$this->namedtag = $this->getRemaining();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$in->getBlockPosition($this->x, $this->y, $this->z);
+		$this->namedtag = $in->getRemaining();
 	}
 
-	protected function encodePayload() : void{
-		$this->putBlockPosition($this->x, $this->y, $this->z);
-		$this->put($this->namedtag);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putBlockPosition($this->x, $this->y, $this->z);
+		$out->put($this->namedtag);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

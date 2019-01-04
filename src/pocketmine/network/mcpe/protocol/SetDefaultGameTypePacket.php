@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class SetDefaultGameTypePacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_DEFAULT_GAME_TYPE_PACKET;
@@ -33,12 +34,12 @@ class SetDefaultGameTypePacket extends DataPacket{
 	/** @var int */
 	public $gamemode;
 
-	protected function decodePayload() : void{
-		$this->gamemode = $this->getVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->gamemode = $in->getVarInt();
 	}
 
-	protected function encodePayload() : void{
-		$this->putUnsignedVarInt($this->gamemode);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putUnsignedVarInt($this->gamemode);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

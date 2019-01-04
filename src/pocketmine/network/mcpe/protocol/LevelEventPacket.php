@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class LevelEventPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::LEVEL_EVENT_PACKET;
@@ -118,16 +119,16 @@ class LevelEventPacket extends DataPacket{
 	/** @var int */
 	public $data;
 
-	protected function decodePayload() : void{
-		$this->evid = $this->getVarInt();
-		$this->position = $this->getVector3();
-		$this->data = $this->getVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->evid = $in->getVarInt();
+		$this->position = $in->getVector3();
+		$this->data = $in->getVarInt();
 	}
 
-	protected function encodePayload() : void{
-		$this->putVarInt($this->evid);
-		$this->putVector3Nullable($this->position);
-		$this->putVarInt($this->data);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putVarInt($this->evid);
+		$out->putVector3Nullable($this->position);
+		$out->putVarInt($this->data);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

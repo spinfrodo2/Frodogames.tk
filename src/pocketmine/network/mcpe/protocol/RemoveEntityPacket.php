@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class RemoveEntityPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::REMOVE_ENTITY_PACKET;
@@ -34,12 +35,12 @@ class RemoveEntityPacket extends DataPacket{
 	/** @var int */
 	public $entityUniqueId;
 
-	protected function decodePayload() : void{
-		$this->entityUniqueId = $this->getEntityUniqueId();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->entityUniqueId = $in->getEntityUniqueId();
 	}
 
-	protected function encodePayload() : void{
-		$this->putEntityUniqueId($this->entityUniqueId);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putEntityUniqueId($this->entityUniqueId);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

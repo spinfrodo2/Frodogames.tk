@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use function count;
 
 class ResourcePackClientResponsePacket extends DataPacket{
@@ -42,19 +43,19 @@ class ResourcePackClientResponsePacket extends DataPacket{
 	/** @var string[] */
 	public $packIds = [];
 
-	protected function decodePayload() : void{
-		$this->status = $this->getByte();
-		$entryCount = $this->getLShort();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->status = $in->getByte();
+		$entryCount = $in->getLShort();
 		while($entryCount-- > 0){
-			$this->packIds[] = $this->getString();
+			$this->packIds[] = $in->getString();
 		}
 	}
 
-	protected function encodePayload() : void{
-		$this->putByte($this->status);
-		$this->putLShort(count($this->packIds));
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putByte($this->status);
+		$out->putLShort(count($this->packIds));
 		foreach($this->packIds as $id){
-			$this->putString($id);
+			$out->putString($id);
 		}
 	}
 

@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class PlayStatusPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAY_STATUS_PACKET;
@@ -43,16 +44,16 @@ class PlayStatusPacket extends DataPacket{
 	/** @var int */
 	public $status;
 
-	protected function decodePayload() : void{
-		$this->status = $this->getInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->status = $in->getInt();
 	}
 
 	public function canBeSentBeforeLogin() : bool{
 		return true;
 	}
 
-	protected function encodePayload() : void{
-		$this->putInt($this->status);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putInt($this->status);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

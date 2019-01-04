@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\BadPacketException;
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\protocol\types\MismatchTransactionData;
 use pocketmine\network\mcpe\protocol\types\NormalTransactionData;
 use pocketmine\network\mcpe\protocol\types\ReleaseItemTransactionData;
@@ -49,8 +50,8 @@ class InventoryTransactionPacket extends DataPacket{
 	/** @var TransactionData */
 	public $trData;
 
-	protected function decodePayload() : void{
-		$transactionType = $this->getUnsignedVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$transactionType = $in->getUnsignedVarInt();
 
 		switch($transactionType){
 			case self::TYPE_NORMAL:
@@ -72,12 +73,12 @@ class InventoryTransactionPacket extends DataPacket{
 				throw new BadPacketException("Unknown transaction type $transactionType");
 		}
 
-		$this->trData->decode($this);
+		$this->trData->decode($in);
 	}
 
-	protected function encodePayload() : void{
-		$this->putUnsignedVarInt($this->trData->getTypeId());
-		$this->trData->encode($this);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putUnsignedVarInt($this->trData->getTypeId());
+		$this->trData->encode($out);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

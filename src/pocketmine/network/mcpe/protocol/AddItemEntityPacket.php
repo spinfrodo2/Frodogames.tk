@@ -28,6 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\item\Item;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class AddItemEntityPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_ITEM_ENTITY_PACKET;
@@ -47,24 +48,24 @@ class AddItemEntityPacket extends DataPacket{
 	/** @var bool */
 	public $isFromFishing = false;
 
-	protected function decodePayload() : void{
-		$this->entityUniqueId = $this->getEntityUniqueId();
-		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->item = $this->getSlot();
-		$this->position = $this->getVector3();
-		$this->motion = $this->getVector3();
-		$this->metadata = $this->getEntityMetadata();
-		$this->isFromFishing = $this->getBool();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->entityUniqueId = $in->getEntityUniqueId();
+		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->item = $in->getSlot();
+		$this->position = $in->getVector3();
+		$this->motion = $in->getVector3();
+		$this->metadata = $in->getEntityMetadata();
+		$this->isFromFishing = $in->getBool();
 	}
 
-	protected function encodePayload() : void{
-		$this->putEntityUniqueId($this->entityUniqueId ?? $this->entityRuntimeId);
-		$this->putEntityRuntimeId($this->entityRuntimeId);
-		$this->putSlot($this->item);
-		$this->putVector3($this->position);
-		$this->putVector3Nullable($this->motion);
-		$this->putEntityMetadata($this->metadata);
-		$this->putBool($this->isFromFishing);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putEntityUniqueId($this->entityUniqueId ?? $this->entityRuntimeId);
+		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putSlot($this->item);
+		$out->putVector3($this->position);
+		$out->putVector3Nullable($this->motion);
+		$out->putEntityMetadata($this->metadata);
+		$out->putBool($this->isFromFishing);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

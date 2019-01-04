@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class ItemFrameDropItemPacket extends DataPacket{
 
@@ -38,12 +39,12 @@ class ItemFrameDropItemPacket extends DataPacket{
 	/** @var int */
 	public $z;
 
-	protected function decodePayload() : void{
-		$this->getBlockPosition($this->x, $this->y, $this->z);
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$in->getBlockPosition($this->x, $this->y, $this->z);
 	}
 
-	protected function encodePayload() : void{
-		$this->putBlockPosition($this->x, $this->y, $this->z);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putBlockPosition($this->x, $this->y, $this->z);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

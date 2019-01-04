@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\protocol\types\CommandOriginData;
 
 class CommandRequestPacket extends DataPacket{
@@ -38,16 +39,16 @@ class CommandRequestPacket extends DataPacket{
 	/** @var bool */
 	public $isInternal;
 
-	protected function decodePayload() : void{
-		$this->command = $this->getString();
-		$this->originData = $this->getCommandOriginData();
-		$this->isInternal = $this->getBool();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->command = $in->getString();
+		$this->originData = $in->getCommandOriginData();
+		$this->isInternal = $in->getBool();
 	}
 
-	protected function encodePayload() : void{
-		$this->putString($this->command);
-		$this->putCommandOriginData($this->originData);
-		$this->putBool($this->isInternal);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putString($this->command);
+		$out->putCommandOriginData($this->originData);
+		$out->putBool($this->isInternal);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

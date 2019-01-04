@@ -28,6 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class MapInfoRequestPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::MAP_INFO_REQUEST_PACKET;
@@ -35,12 +36,12 @@ class MapInfoRequestPacket extends DataPacket{
 	/** @var int */
 	public $mapId;
 
-	protected function decodePayload() : void{
-		$this->mapId = $this->getEntityUniqueId();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->mapId = $in->getEntityUniqueId();
 	}
 
-	protected function encodePayload() : void{
-		$this->putEntityUniqueId($this->mapId);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putEntityUniqueId($this->mapId);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

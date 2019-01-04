@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class FullChunkDataPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::FULL_CHUNK_DATA_PACKET;
@@ -38,16 +39,16 @@ class FullChunkDataPacket extends DataPacket{
 	/** @var string */
 	public $data;
 
-	protected function decodePayload() : void{
-		$this->chunkX = $this->getVarInt();
-		$this->chunkZ = $this->getVarInt();
-		$this->data = $this->getString();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->chunkX = $in->getVarInt();
+		$this->chunkZ = $in->getVarInt();
+		$this->data = $in->getString();
 	}
 
-	protected function encodePayload() : void{
-		$this->putVarInt($this->chunkX);
-		$this->putVarInt($this->chunkZ);
-		$this->putString($this->data);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putVarInt($this->chunkX);
+		$out->putVarInt($this->chunkZ);
+		$out->putString($this->data);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

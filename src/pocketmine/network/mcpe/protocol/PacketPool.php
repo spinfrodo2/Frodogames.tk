@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\BadPacketException;
-use pocketmine\utils\Binary;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\utils\BinaryDataException;
 
 class PacketPool{
@@ -174,20 +174,19 @@ class PacketPool{
 	}
 
 	/**
-	 * @param string $buffer
+	 * @param NetworkBinaryStream $buffer
 	 *
 	 * @return DataPacket
 	 * @throws BadPacketException
 	 */
-	public static function getPacket(string $buffer) : DataPacket{
-		$offset = 0;
+	public static function getPacket(NetworkBinaryStream $buffer) : DataPacket{
+		$offset = $buffer->getOffset();
 		try{
-			$pk = static::getPacketById(Binary::readUnsignedVarInt($buffer, $offset));
+			$pk = static::getPacketById($buffer->getUnsignedVarInt());
 		}catch(BinaryDataException $e){
 			throw new BadPacketException("Packet is too short");
 		}
-		$pk->setBuffer($buffer, $offset);
-
+		$buffer->offset = $offset;
 		return $pk;
 	}
 }

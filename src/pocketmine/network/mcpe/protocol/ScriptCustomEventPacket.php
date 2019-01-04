@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class ScriptCustomEventPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SCRIPT_CUSTOM_EVENT_PACKET;
@@ -35,14 +36,14 @@ class ScriptCustomEventPacket extends DataPacket{
 	/** @var string json data */
 	public $eventData;
 
-	protected function decodePayload() : void{
-		$this->eventName = $this->getString();
-		$this->eventData = $this->getString();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->eventName = $in->getString();
+		$this->eventData = $in->getString();
 	}
 
-	protected function encodePayload() : void{
-		$this->putString($this->eventName);
-		$this->putString($this->eventData);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putString($this->eventName);
+		$out->putString($this->eventData);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

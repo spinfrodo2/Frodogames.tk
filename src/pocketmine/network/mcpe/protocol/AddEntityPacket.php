@@ -30,6 +30,7 @@ use pocketmine\entity\EntityIds;
 use pocketmine\math\Vector3;
 use pocketmine\network\BadPacketException;
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 use function array_search;
 use function count;
@@ -169,25 +170,25 @@ class AddEntityPacket extends DataPacket{
 	/** @var EntityLink[] */
 	public $links = [];
 
-	protected function decodePayload() : void{
-		$this->entityUniqueId = $this->getEntityUniqueId();
-		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->type = array_search($t = $this->getString(), self::LEGACY_ID_MAP_BC, true);
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->entityUniqueId = $in->getEntityUniqueId();
+		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->type = array_search($t = $in->getString(), self::LEGACY_ID_MAP_BC, true);
 		if($this->type === false){
 			throw new BadPacketException("Can't map ID $t to legacy ID");
 		}
-		$this->position = $this->getVector3();
-		$this->motion = $this->getVector3();
-		$this->pitch = $this->getLFloat();
-		$this->yaw = $this->getLFloat();
-		$this->headYaw = $this->getLFloat();
+		$this->position = $in->getVector3();
+		$this->motion = $in->getVector3();
+		$this->pitch = $in->getLFloat();
+		$this->yaw = $in->getLFloat();
+		$this->headYaw = $in->getLFloat();
 
-		$attrCount = $this->getUnsignedVarInt();
+		$attrCount = $in->getUnsignedVarInt();
 		for($i = 0; $i < $attrCount; ++$i){
-			$id = $this->getString();
-			$min = $this->getLFloat();
-			$current = $this->getLFloat();
-			$max = $this->getLFloat();
+			$id = $in->getString();
+			$min = $in->getLFloat();
+			$current = $in->getLFloat();
+			$max = $in->getLFloat();
 			$attr = Attribute::getAttribute($id);
 
 			if($attr !== null){
@@ -200,38 +201,38 @@ class AddEntityPacket extends DataPacket{
 			}
 		}
 
-		$this->metadata = $this->getEntityMetadata();
-		$linkCount = $this->getUnsignedVarInt();
+		$this->metadata = $in->getEntityMetadata();
+		$linkCount = $in->getUnsignedVarInt();
 		for($i = 0; $i < $linkCount; ++$i){
-			$this->links[] = $this->getEntityLink();
+			$this->links[] = $in->getEntityLink();
 		}
 	}
 
-	protected function encodePayload() : void{
-		$this->putEntityUniqueId($this->entityUniqueId ?? $this->entityRuntimeId);
-		$this->putEntityRuntimeId($this->entityRuntimeId);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putEntityUniqueId($this->entityUniqueId ?? $this->entityRuntimeId);
+		$out->putEntityRuntimeId($this->entityRuntimeId);
 		if(!isset(self::LEGACY_ID_MAP_BC[$this->type])){
 			throw new \InvalidArgumentException("Unknown entity numeric ID $this->type");
 		}
-		$this->putString(self::LEGACY_ID_MAP_BC[$this->type]);
-		$this->putVector3($this->position);
-		$this->putVector3Nullable($this->motion);
-		$this->putLFloat($this->pitch);
-		$this->putLFloat($this->yaw);
-		$this->putLFloat($this->headYaw);
+		$out->putString(self::LEGACY_ID_MAP_BC[$this->type]);
+		$out->putVector3($this->position);
+		$out->putVector3Nullable($this->motion);
+		$out->putLFloat($this->pitch);
+		$out->putLFloat($this->yaw);
+		$out->putLFloat($this->headYaw);
 
-		$this->putUnsignedVarInt(count($this->attributes));
+		$out->putUnsignedVarInt(count($this->attributes));
 		foreach($this->attributes as $attribute){
-			$this->putString($attribute->getId());
-			$this->putLFloat($attribute->getMinValue());
-			$this->putLFloat($attribute->getValue());
-			$this->putLFloat($attribute->getMaxValue());
+			$out->putString($attribute->getId());
+			$out->putLFloat($attribute->getMinValue());
+			$out->putLFloat($attribute->getValue());
+			$out->putLFloat($attribute->getMaxValue());
 		}
 
-		$this->putEntityMetadata($this->metadata);
-		$this->putUnsignedVarInt(count($this->links));
+		$out->putEntityMetadata($this->metadata);
+		$out->putUnsignedVarInt(count($this->links));
 		foreach($this->links as $link){
-			$this->putEntityLink($link);
+			$out->putEntityLink($link);
 		}
 	}
 

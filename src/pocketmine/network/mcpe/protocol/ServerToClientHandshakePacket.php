@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class ServerToClientHandshakePacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVER_TO_CLIENT_HANDSHAKE_PACKET;
@@ -41,12 +42,12 @@ class ServerToClientHandshakePacket extends DataPacket{
 		return true;
 	}
 
-	protected function decodePayload() : void{
-		$this->jwt = $this->getString();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->jwt = $in->getString();
 	}
 
-	protected function encodePayload() : void{
-		$this->putString($this->jwt);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putString($this->jwt);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

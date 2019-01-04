@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use function count;
 
 class TextPacket extends DataPacket{
@@ -57,64 +58,64 @@ class TextPacket extends DataPacket{
 	/** @var string */
 	public $platformChatId = "";
 
-	protected function decodePayload() : void{
-		$this->type = $this->getByte();
-		$this->needsTranslation = $this->getBool();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->type = $in->getByte();
+		$this->needsTranslation = $in->getBool();
 		switch($this->type){
 			case self::TYPE_CHAT:
 			case self::TYPE_WHISPER:
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_ANNOUNCEMENT:
-				$this->sourceName = $this->getString();
+				$this->sourceName = $in->getString();
 			case self::TYPE_RAW:
 			case self::TYPE_TIP:
 			case self::TYPE_SYSTEM:
-				$this->message = $this->getString();
+				$this->message = $in->getString();
 				break;
 
 			case self::TYPE_TRANSLATION:
 			case self::TYPE_POPUP:
 			case self::TYPE_JUKEBOX_POPUP:
-				$this->message = $this->getString();
-				$count = $this->getUnsignedVarInt();
+				$this->message = $in->getString();
+				$count = $in->getUnsignedVarInt();
 				for($i = 0; $i < $count; ++$i){
-					$this->parameters[] = $this->getString();
+					$this->parameters[] = $in->getString();
 				}
 				break;
 		}
 
-		$this->xboxUserId = $this->getString();
-		$this->platformChatId = $this->getString();
+		$this->xboxUserId = $in->getString();
+		$this->platformChatId = $in->getString();
 	}
 
-	protected function encodePayload() : void{
-		$this->putByte($this->type);
-		$this->putBool($this->needsTranslation);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putByte($this->type);
+		$out->putBool($this->needsTranslation);
 		switch($this->type){
 			case self::TYPE_CHAT:
 			case self::TYPE_WHISPER:
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_ANNOUNCEMENT:
-				$this->putString($this->sourceName);
+				$out->putString($this->sourceName);
 			case self::TYPE_RAW:
 			case self::TYPE_TIP:
 			case self::TYPE_SYSTEM:
-				$this->putString($this->message);
+				$out->putString($this->message);
 				break;
 
 			case self::TYPE_TRANSLATION:
 			case self::TYPE_POPUP:
 			case self::TYPE_JUKEBOX_POPUP:
-				$this->putString($this->message);
-				$this->putUnsignedVarInt(count($this->parameters));
+				$out->putString($this->message);
+				$out->putUnsignedVarInt(count($this->parameters));
 				foreach($this->parameters as $p){
-					$this->putString($p);
+					$out->putString($p);
 				}
 				break;
 		}
 
-		$this->putString($this->xboxUserId);
-		$this->putString($this->platformChatId);
+		$out->putString($this->xboxUserId);
+		$out->putString($this->platformChatId);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class AddHangingEntityPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_HANGING_ENTITY_PACKET;
@@ -43,18 +44,18 @@ class AddHangingEntityPacket extends DataPacket{
 	/** @var int */
 	public $direction;
 
-	protected function decodePayload() : void{
-		$this->entityUniqueId = $this->getEntityUniqueId();
-		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->getBlockPosition($this->x, $this->y, $this->z);
-		$this->direction = $this->getVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->entityUniqueId = $in->getEntityUniqueId();
+		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$in->getBlockPosition($this->x, $this->y, $this->z);
+		$this->direction = $in->getVarInt();
 	}
 
-	protected function encodePayload() : void{
-		$this->putEntityUniqueId($this->entityUniqueId ?? $this->entityRuntimeId);
-		$this->putEntityRuntimeId($this->entityRuntimeId);
-		$this->putBlockPosition($this->x, $this->y, $this->z);
-		$this->putVarInt($this->direction);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putEntityUniqueId($this->entityUniqueId ?? $this->entityRuntimeId);
+		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putBlockPosition($this->x, $this->y, $this->z);
+		$out->putVarInt($this->direction);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\BadPacketException;
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\protocol\types\CommandData;
 use pocketmine\network\mcpe\protocol\types\CommandEnum;
 use pocketmine\network\mcpe\protocol\types\CommandParameter;
@@ -118,34 +119,40 @@ class AvailableCommandsPacket extends DataPacket{
 	 */
 	public $softEnums = [];
 
-	protected function decodePayload() : void{
-		for($i = 0, $this->enumValuesCount = $this->getUnsignedVarInt(); $i < $this->enumValuesCount; ++$i){
-			$this->enumValues[] = $this->getString();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		for($i = 0, $this->enumValuesCount = $in->getUnsignedVarInt(); $i < $this->enumValuesCount; ++$i){
+			$this->enumValues[] = $in->getString();
 		}
 
-		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
-			$this->postfixes[] = $this->getString();
+		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+			$this->postfixes[] = $in->getString();
 		}
 
-		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
-			$this->enums[] = $this->getEnum();
+		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+			$this->enums[] = $this->getEnum($in);
 		}
 
-		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
-			$this->commandData[] = $this->getCommandData();
+		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+			$this->commandData[] = $this->getCommandData($in);
 		}
 
-		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
-			$this->softEnums[] = $this->getSoftEnum();
+		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+			$this->softEnums[] = $this->getSoftEnum($in);
 		}
 	}
 
-	protected function getEnum() : CommandEnum{
+	/**
+	 * @param NetworkBinaryStream $in
+	 *
+	 * @return CommandEnum
+	 * @throws \OutOfBoundsException
+	 */
+	protected function getEnum(NetworkBinaryStream $in) : CommandEnum{
 		$retval = new CommandEnum();
-		$retval->enumName = $this->getString();
+		$retval->enumName = $in->getString();
 
-		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
-			$index = $this->getEnumValueIndex();
+		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+			$index = $this->getEnumValueIndex($in);
 			if(!isset($this->enumValues[$index])){
 				throw new BadPacketException("Invalid enum value index $index");
 			}
@@ -156,75 +163,94 @@ class AvailableCommandsPacket extends DataPacket{
 		return $retval;
 	}
 
-	protected function getSoftEnum() : CommandEnum{
+	/**
+	 * @param NetworkBinaryStream $in
+	 *
+	 * @return CommandEnum
+	 * @throws \OutOfBoundsException
+	 */
+	protected function getSoftEnum(NetworkBinaryStream $in) : CommandEnum{
 		$retval = new CommandEnum();
-		$retval->enumName = $this->getString();
+		$retval->enumName = $in->getString();
 
-		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
 			//Get the enum value from the initial pile of mess
-			$retval->enumValues[] = $this->getString();
+			$retval->enumValues[] = $in->getString();
 		}
 
 		return $retval;
 	}
 
-	protected function putEnum(CommandEnum $enum) : void{
-		$this->putString($enum->enumName);
+	protected function putEnum(NetworkBinaryStream $out, CommandEnum $enum) : void{
+		$out->putString($enum->enumName);
 
-		$this->putUnsignedVarInt(count($enum->enumValues));
+		$out->putUnsignedVarInt(count($enum->enumValues));
 		foreach($enum->enumValues as $value){
 			//Dumb bruteforce search. I hate this packet.
 			$index = array_search($value, $this->enumValues, true);
 			if($index === false){
 				throw new \InvalidStateException("Enum value '$value' not found");
 			}
-			$this->putEnumValueIndex($index);
+			$this->putEnumValueIndex($out, $index);
 		}
 	}
 
-	protected function putSoftEnum(CommandEnum $enum) : void{
-		$this->putString($enum->enumName);
+	protected function putSoftEnum(NetworkBinaryStream $out, CommandEnum $enum) : void{
+		$out->putString($enum->enumName);
 
-		$this->putUnsignedVarInt(count($enum->enumValues));
+		$out->putUnsignedVarInt(count($enum->enumValues));
 		foreach($enum->enumValues as $value){
-			$this->putString($value);
+			$out->putString($value);
 		}
 	}
 
-	protected function getEnumValueIndex() : int{
+	/**
+	 * @param NetworkBinaryStream $in
+	 *
+	 * @return int
+	 * @throws \OutOfBoundsException
+	 */
+	protected function getEnumValueIndex(NetworkBinaryStream $in) : int{
 		if($this->enumValuesCount < 256){
-			return $this->getByte();
+			return $in->getByte();
 		}elseif($this->enumValuesCount < 65536){
-			return $this->getLShort();
+			return $in->getLShort();
 		}else{
-			return $this->getLInt();
+			return $in->getLInt();
 		}
 	}
 
-	protected function putEnumValueIndex(int $index) : void{
+	protected function putEnumValueIndex(NetworkBinaryStream $out, int $index) : void{
 		if($this->enumValuesCount < 256){
-			$this->putByte($index);
+			$out->putByte($index);
 		}elseif($this->enumValuesCount < 65536){
-			$this->putLShort($index);
+			$out->putLShort($index);
 		}else{
-			$this->putLInt($index);
+			$out->putLInt($index);
 		}
 	}
 
-	protected function getCommandData() : CommandData{
+	/**
+	 * @param NetworkBinaryStream $in
+	 *
+	 * @return CommandData
+	 * @throws \OutOfBoundsException
+	 * @throws \UnexpectedValueException
+	 */
+	protected function getCommandData(NetworkBinaryStream $in) : CommandData{
 		$retval = new CommandData();
-		$retval->commandName = $this->getString();
-		$retval->commandDescription = $this->getString();
-		$retval->flags = $this->getByte();
-		$retval->permission = $this->getByte();
-		$retval->aliases = $this->enums[$this->getLInt()] ?? null;
+		$retval->commandName = $in->getString();
+		$retval->commandDescription = $in->getString();
+		$retval->flags = $in->getByte();
+		$retval->permission = $in->getByte();
+		$retval->aliases = $this->enums[$in->getLInt()] ?? null;
 
-		for($overloadIndex = 0, $overloadCount = $this->getUnsignedVarInt(); $overloadIndex < $overloadCount; ++$overloadIndex){
-			for($paramIndex = 0, $paramCount = $this->getUnsignedVarInt(); $paramIndex < $paramCount; ++$paramIndex){
+		for($overloadIndex = 0, $overloadCount = $in->getUnsignedVarInt(); $overloadIndex < $overloadCount; ++$overloadIndex){
+			for($paramIndex = 0, $paramCount = $in->getUnsignedVarInt(); $paramIndex < $paramCount; ++$paramIndex){
 				$parameter = new CommandParameter();
-				$parameter->paramName = $this->getString();
-				$parameter->paramType = $this->getLInt();
-				$parameter->isOptional = $this->getBool();
+				$parameter->paramName = $in->getString();
+				$parameter->paramType = $in->getLInt();
+				$parameter->isOptional = $in->getBool();
 
 				if($parameter->paramType & self::ARG_FLAG_ENUM){
 					$index = ($parameter->paramType & 0xffff);
@@ -249,24 +275,24 @@ class AvailableCommandsPacket extends DataPacket{
 		return $retval;
 	}
 
-	protected function putCommandData(CommandData $data) : void{
-		$this->putString($data->commandName);
-		$this->putString($data->commandDescription);
-		$this->putByte($data->flags);
-		$this->putByte($data->permission);
+	protected function putCommandData(NetworkBinaryStream $out, CommandData $data) : void{
+		$out->putString($data->commandName);
+		$out->putString($data->commandDescription);
+		$out->putByte($data->flags);
+		$out->putByte($data->permission);
 
 		if($data->aliases !== null){
-			$this->putLInt($this->enumMap[$data->aliases->enumName] ?? -1);
+			$out->putLInt($this->enumMap[$data->aliases->enumName] ?? -1);
 		}else{
-			$this->putLInt(-1);
+			$out->putLInt(-1);
 		}
 
-		$this->putUnsignedVarInt(count($data->overloads));
+		$out->putUnsignedVarInt(count($data->overloads));
 		foreach($data->overloads as $overload){
 			/** @var CommandParameter[] $overload */
-			$this->putUnsignedVarInt(count($overload));
+			$out->putUnsignedVarInt(count($overload));
 			foreach($overload as $parameter){
-				$this->putString($parameter->paramName);
+				$out->putString($parameter->paramName);
 
 				if($parameter->enum !== null){
 					$type = self::ARG_FLAG_ENUM | self::ARG_FLAG_VALID | ($this->enumMap[$parameter->enum->enumName] ?? -1);
@@ -280,8 +306,8 @@ class AvailableCommandsPacket extends DataPacket{
 					$type = $parameter->paramType;
 				}
 
-				$this->putLInt($type);
-				$this->putBool($parameter->isOptional);
+				$out->putLInt($type);
+				$out->putBool($parameter->isOptional);
 			}
 		}
 	}
@@ -325,7 +351,7 @@ class AvailableCommandsPacket extends DataPacket{
 		return "unknown ($argtype)";
 	}
 
-	protected function encodePayload() : void{
+	protected function encodePayload(NetworkBinaryStream $out) : void{
 		$enumValuesMap = [];
 		$postfixesMap = [];
 		$enumMap = [];
@@ -359,32 +385,32 @@ class AvailableCommandsPacket extends DataPacket{
 		}
 
 		$this->enumValues = array_map('\strval', array_keys($enumValuesMap)); //stupid PHP key casting D:
-		$this->putUnsignedVarInt($this->enumValuesCount = count($this->enumValues));
+		$out->putUnsignedVarInt($this->enumValuesCount = count($this->enumValues));
 		foreach($this->enumValues as $enumValue){
-			$this->putString($enumValue);
+			$out->putString($enumValue);
 		}
 
 		$this->postfixes = array_map('\strval', array_keys($postfixesMap));
-		$this->putUnsignedVarInt(count($this->postfixes));
+		$out->putUnsignedVarInt(count($this->postfixes));
 		foreach($this->postfixes as $postfix){
-			$this->putString($postfix);
+			$out->putString($postfix);
 		}
 
 		$this->enums = array_values($enumMap);
 		$this->enumMap = array_flip(array_keys($enumMap));
-		$this->putUnsignedVarInt(count($this->enums));
+		$out->putUnsignedVarInt(count($this->enums));
 		foreach($this->enums as $enum){
-			$this->putEnum($enum);
+			$this->putEnum($out, $enum);
 		}
 
-		$this->putUnsignedVarInt(count($this->commandData));
+		$out->putUnsignedVarInt(count($this->commandData));
 		foreach($this->commandData as $data){
-			$this->putCommandData($data);
+			$this->putCommandData($out, $data);
 		}
 
-		$this->putUnsignedVarInt(count($this->softEnums));
+		$out->putUnsignedVarInt(count($this->softEnums));
 		foreach($this->softEnums as $enum){
-			$this->putSoftEnum($enum);
+			$this->putSoftEnum($out, $enum);
 		}
 	}
 

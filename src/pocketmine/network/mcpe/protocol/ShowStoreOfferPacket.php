@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class ShowStoreOfferPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SHOW_STORE_OFFER_PACKET;
@@ -35,14 +36,14 @@ class ShowStoreOfferPacket extends DataPacket{
 	/** @var bool */
 	public $showAll;
 
-	protected function decodePayload() : void{
-		$this->offerId = $this->getString();
-		$this->showAll = $this->getBool();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->offerId = $in->getString();
+		$this->showAll = $in->getBool();
 	}
 
-	protected function encodePayload() : void{
-		$this->putString($this->offerId);
-		$this->putBool($this->showAll);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putString($this->offerId);
+		$out->putBool($this->showAll);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

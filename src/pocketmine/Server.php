@@ -71,10 +71,10 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\AdvancedNetworkInterface;
 use pocketmine\network\mcpe\CompressBatchPromise;
 use pocketmine\network\mcpe\CompressBatchTask;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\NetworkCipher;
 use pocketmine\network\mcpe\NetworkCompression;
 use pocketmine\network\mcpe\NetworkSession;
-use pocketmine\network\mcpe\PacketStream;
 use pocketmine\network\mcpe\protocol\DataPacket;
 use pocketmine\network\mcpe\protocol\PlayerListPacket;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
@@ -1572,19 +1572,31 @@ class Server{
 			return false;
 		}
 
-		$stream = new PacketStream();
+		/** @var string[] $buffers */
+		$buffers = [];
+		$writer = new NetworkBinaryStream();
+		$size = 0;
+
 		foreach($ev->getPackets() as $packet){
-			$stream->putPacket($packet);
+			$packet->encode($writer);
+			$buf = $writer->getBuffer();
+			$buffers[] = $buf;
+			$size += strlen($buf); //TODO: this doesn't include length prefix
+			$writer->reset();
 		}
 
-		if(NetworkCompression::$THRESHOLD < 0 or strlen($stream->getBuffer()) < NetworkCompression::$THRESHOLD){
+		if(NetworkCompression::$THRESHOLD < 0 or $size < NetworkCompression::$THRESHOLD){
 			foreach($targets as $target){
-				foreach($ev->getPackets() as $pk){
-					$target->addToSendBuffer($pk);
+				foreach($buffers as $buf){
+					$target->addToSendBuffer($buf);
 				}
 			}
 		}else{
-			$promise = $this->prepareBatch($stream);
+			$batch = new NetworkBinaryStream();
+			foreach($buffers as $buf){
+				$batch->putString($buf);
+			}
+			$promise = $this->prepareBatch($batch->getBuffer());
 			foreach($targets as $target){
 				$target->queueCompressed($promise);
 			}
@@ -1596,17 +1608,16 @@ class Server{
 	/**
 	 * Broadcasts a list of packets in a batch to a list of players
 	 *
-	 * @param PacketStream $stream
-	 * @param bool         $forceSync
+	 * @param string $buffer
+	 * @param bool   $forceSync
 	 *
 	 * @return CompressBatchPromise
 	 */
-	public function prepareBatch(PacketStream $stream, bool $forceSync = false) : CompressBatchPromise{
+	public function prepareBatch(string $buffer, bool $forceSync = false) : CompressBatchPromise{
 		try{
 			Timings::$playerNetworkSendCompressTimer->startTiming();
 
 			$compressionLevel = NetworkCompression::$LEVEL;
-			$buffer = $stream->getBuffer();
 			if(NetworkCompression::$THRESHOLD < 0 or strlen($buffer) < NetworkCompression::$THRESHOLD){
 				$compressionLevel = 0; //Do not compress packets under the threshold
 				$forceSync = true;

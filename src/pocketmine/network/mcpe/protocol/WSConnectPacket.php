@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class WSConnectPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::W_S_CONNECT_PACKET;
@@ -33,12 +34,12 @@ class WSConnectPacket extends DataPacket{
 	/** @var string */
 	public $serverUri;
 
-	protected function decodePayload() : void{
-		$this->serverUri = $this->getString();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->serverUri = $in->getString();
 	}
 
-	protected function encodePayload() : void{
-		$this->putString($this->serverUri);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putString($this->serverUri);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

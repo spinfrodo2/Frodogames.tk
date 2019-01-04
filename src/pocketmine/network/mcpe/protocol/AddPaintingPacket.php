@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class AddPaintingPacket extends AddHangingEntityPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_PAINTING_PACKET;
@@ -34,14 +35,14 @@ class AddPaintingPacket extends AddHangingEntityPacket{
 	/** @var string */
 	public $title;
 
-	protected function decodePayload() : void{
-		parent::decodePayload();
-		$this->title = $this->getString();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		parent::decodePayload($in);
+		$this->title = $in->getString();
 	}
 
-	protected function encodePayload() : void{
-		parent::encodePayload();
-		$this->putString($this->title);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		parent::encodePayload($out);
+		$out->putString($this->title);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

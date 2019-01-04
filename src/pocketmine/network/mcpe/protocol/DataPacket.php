@@ -29,19 +29,11 @@ use pocketmine\network\BadPacketException;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\utils\BinaryDataException;
-use pocketmine\utils\Utils;
-use function bin2hex;
 use function get_class;
-use function is_object;
-use function is_string;
-use function method_exists;
 
-abstract class DataPacket extends NetworkBinaryStream{
+abstract class DataPacket{
 
 	public const NETWORK_ID = 0;
-
-	/** @var bool */
-	public $isEncoded = false;
 
 	/** @var int */
 	public $senderSubId = 0;
@@ -69,24 +61,27 @@ abstract class DataPacket extends NetworkBinaryStream{
 	}
 
 	/**
+	 * @param NetworkBinaryStream $in
+	 *
 	 * @throws BadPacketException
 	 */
-	final public function decode() : void{
-		$this->rewind();
+	final public function decode(NetworkBinaryStream $in) : void{
 		try{
-			$this->decodeHeader();
-			$this->decodePayload();
+			$this->decodeHeader($in);
+			$this->decodePayload($in);
 		}catch(BinaryDataException | BadPacketException $e){
 			throw new BadPacketException($this->getName() . ": " . $e->getMessage(), 0, $e);
 		}
 	}
 
 	/**
+	 * @param NetworkBinaryStream $in
+	 *
 	 * @throws BinaryDataException
 	 * @throws \UnexpectedValueException
 	 */
-	protected function decodeHeader() : void{
-		$pid = $this->getUnsignedVarInt();
+	protected function decodeHeader(NetworkBinaryStream $in) : void{
+		$pid = $in->getUnsignedVarInt();
 		if($pid !== static::NETWORK_ID){
 			//TODO: this means a logical error in the code, but how to prevent it from happening?
 			throw new \UnexpectedValueException("Expected " . static::NETWORK_ID . " for packet ID, got $pid");
@@ -96,26 +91,28 @@ abstract class DataPacket extends NetworkBinaryStream{
 	/**
 	 * Decodes the packet body, without the packet ID or other generic header fields.
 	 *
+	 * @param NetworkBinaryStream $in
+	 *
 	 * @throws BadPacketException
 	 * @throws BinaryDataException
 	 */
-	abstract protected function decodePayload() : void;
+	abstract protected function decodePayload(NetworkBinaryStream $in) : void;
 
-	final public function encode() : void{
-		$this->reset();
-		$this->encodeHeader();
-		$this->encodePayload();
-		$this->isEncoded = true;
+	final public function encode(NetworkBinaryStream $out) : void{
+		$this->encodeHeader($out);
+		$this->encodePayload($out);
 	}
 
-	protected function encodeHeader() : void{
-		$this->putUnsignedVarInt(static::NETWORK_ID);
+	protected function encodeHeader(NetworkBinaryStream $out) : void{
+		$out->putUnsignedVarInt($this->pid());
 	}
 
 	/**
 	 * Encodes the packet body, without the packet ID or other generic header fields.
+	 *
+	 * @param NetworkBinaryStream $out
 	 */
-	abstract protected function encodePayload() : void;
+	abstract protected function encodePayload(NetworkBinaryStream $out) : void;
 
 	/**
 	 * Performs handling for this packet. Usually you'll want an appropriately named method in the session handler for
@@ -133,21 +130,6 @@ abstract class DataPacket extends NetworkBinaryStream{
 	 * @throws BadPacketException if broken data was found in the packet
 	 */
 	abstract public function handle(SessionHandler $handler) : bool;
-
-	public function __debugInfo(){
-		$data = [];
-		foreach($this as $k => $v){
-			if($k === "buffer" and is_string($v)){
-				$data[$k] = bin2hex($v);
-			}elseif(is_string($v) or (is_object($v) and method_exists($v, "__toString"))){
-				$data[$k] = Utils::printable((string) $v);
-			}else{
-				$data[$k] = $v;
-			}
-		}
-
-		return $data;
-	}
 
 	public function __get($name){
 		throw new \Error("Undefined property: " . get_class($this) . "::\$" . $name);

@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use function ord;
 use function strlen;
 
@@ -46,20 +47,20 @@ class UnknownPacket extends DataPacket{
 		return "unknown packet";
 	}
 
-	protected function decodeHeader() : void{
+	protected function decodeHeader(NetworkBinaryStream $in) : void{
 
 	}
 
-	protected function decodePayload() : void{
-		$this->payload = $this->getRemaining();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->payload = $in->getRemaining();
 	}
 
-	protected function encodeHeader() : void{
+	protected function encodeHeader(NetworkBinaryStream $out) : void{
 
 	}
 
-	protected function encodePayload() : void{
-		$this->put($this->payload);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->put($this->payload);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

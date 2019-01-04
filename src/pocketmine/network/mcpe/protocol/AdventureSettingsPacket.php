@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\protocol\types\PlayerPermissions;
 
 class AdventureSettingsPacket extends DataPacket{
@@ -76,22 +77,22 @@ class AdventureSettingsPacket extends DataPacket{
 	/** @var int */
 	public $entityUniqueId; //This is a little-endian long, NOT a var-long. (WTF Mojang)
 
-	protected function decodePayload() : void{
-		$this->flags = $this->getUnsignedVarInt();
-		$this->commandPermission = $this->getUnsignedVarInt();
-		$this->flags2 = $this->getUnsignedVarInt();
-		$this->playerPermission = $this->getUnsignedVarInt();
-		$this->customFlags = $this->getUnsignedVarInt();
-		$this->entityUniqueId = $this->getLLong();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->flags = $in->getUnsignedVarInt();
+		$this->commandPermission = $in->getUnsignedVarInt();
+		$this->flags2 = $in->getUnsignedVarInt();
+		$this->playerPermission = $in->getUnsignedVarInt();
+		$this->customFlags = $in->getUnsignedVarInt();
+		$this->entityUniqueId = $in->getLLong();
 	}
 
-	protected function encodePayload() : void{
-		$this->putUnsignedVarInt($this->flags);
-		$this->putUnsignedVarInt($this->commandPermission);
-		$this->putUnsignedVarInt($this->flags2);
-		$this->putUnsignedVarInt($this->playerPermission);
-		$this->putUnsignedVarInt($this->customFlags);
-		$this->putLLong($this->entityUniqueId);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putUnsignedVarInt($this->flags);
+		$out->putUnsignedVarInt($this->commandPermission);
+		$out->putUnsignedVarInt($this->flags2);
+		$out->putUnsignedVarInt($this->playerPermission);
+		$out->putUnsignedVarInt($this->customFlags);
+		$out->putLLong($this->entityUniqueId);
 	}
 
 	public function getFlag(int $flag) : bool{

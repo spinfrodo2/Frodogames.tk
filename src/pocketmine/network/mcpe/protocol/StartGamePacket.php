@@ -141,120 +141,120 @@ class StartGamePacket extends DataPacket{
 	/** @var string */
 	public $multiplayerCorrelationId = ""; //TODO: this should be filled with a UUID of some sort
 
-	protected function decodePayload() : void{
-		$this->entityUniqueId = $this->getEntityUniqueId();
-		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->playerGamemode = $this->getVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->entityUniqueId = $in->getEntityUniqueId();
+		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->playerGamemode = $in->getVarInt();
 
-		$this->playerPosition = $this->getVector3();
+		$this->playerPosition = $in->getVector3();
 
-		$this->pitch = $this->getLFloat();
-		$this->yaw = $this->getLFloat();
+		$this->pitch = $in->getLFloat();
+		$this->yaw = $in->getLFloat();
 
 		//Level settings
-		$this->seed = $this->getVarInt();
-		$this->dimension = $this->getVarInt();
-		$this->generator = $this->getVarInt();
-		$this->worldGamemode = $this->getVarInt();
-		$this->difficulty = $this->getVarInt();
-		$this->getBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
-		$this->hasAchievementsDisabled = $this->getBool();
-		$this->time = $this->getVarInt();
-		$this->eduMode = $this->getBool();
-		$this->hasEduFeaturesEnabled = $this->getBool();
-		$this->rainLevel = $this->getLFloat();
-		$this->lightningLevel = $this->getLFloat();
-		$this->isMultiplayerGame = $this->getBool();
-		$this->hasLANBroadcast = $this->getBool();
-		$this->hasXboxLiveBroadcast = $this->getBool();
-		$this->commandsEnabled = $this->getBool();
-		$this->isTexturePacksRequired = $this->getBool();
-		$this->gameRules = $this->getGameRules();
-		$this->hasBonusChestEnabled = $this->getBool();
-		$this->hasStartWithMapEnabled = $this->getBool();
-		$this->hasTrustPlayersEnabled = $this->getBool();
-		$this->defaultPlayerPermission = $this->getVarInt();
-		$this->xboxLiveBroadcastMode = $this->getVarInt();
-		$this->serverChunkTickRadius = $this->getLInt();
-		$this->hasPlatformBroadcast = $this->getBool();
-		$this->platformBroadcastMode = $this->getVarInt();
-		$this->xboxLiveBroadcastIntent = $this->getBool();
-		$this->hasLockedBehaviorPack = $this->getBool();
-		$this->hasLockedResourcePack = $this->getBool();
-		$this->isFromLockedWorldTemplate = $this->getBool();
-		$this->useMsaGamertagsOnly = $this->getBool();
-		$this->isFromWorldTemplate = $this->getBool();
-		$this->isWorldTemplateOptionLocked = $this->getBool();
+		$this->seed = $in->getVarInt();
+		$this->dimension = $in->getVarInt();
+		$this->generator = $in->getVarInt();
+		$this->worldGamemode = $in->getVarInt();
+		$this->difficulty = $in->getVarInt();
+		$in->getBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
+		$this->hasAchievementsDisabled = $in->getBool();
+		$this->time = $in->getVarInt();
+		$this->eduMode = $in->getBool();
+		$this->hasEduFeaturesEnabled = $in->getBool();
+		$this->rainLevel = $in->getLFloat();
+		$this->lightningLevel = $in->getLFloat();
+		$this->isMultiplayerGame = $in->getBool();
+		$this->hasLANBroadcast = $in->getBool();
+		$this->hasXboxLiveBroadcast = $in->getBool();
+		$this->commandsEnabled = $in->getBool();
+		$this->isTexturePacksRequired = $in->getBool();
+		$this->gameRules = $in->getGameRules();
+		$this->hasBonusChestEnabled = $in->getBool();
+		$this->hasStartWithMapEnabled = $in->getBool();
+		$this->hasTrustPlayersEnabled = $in->getBool();
+		$this->defaultPlayerPermission = $in->getVarInt();
+		$this->xboxLiveBroadcastMode = $in->getVarInt();
+		$this->serverChunkTickRadius = $in->getLInt();
+		$this->hasPlatformBroadcast = $in->getBool();
+		$this->platformBroadcastMode = $in->getVarInt();
+		$this->xboxLiveBroadcastIntent = $in->getBool();
+		$this->hasLockedBehaviorPack = $in->getBool();
+		$this->hasLockedResourcePack = $in->getBool();
+		$this->isFromLockedWorldTemplate = $in->getBool();
+		$this->useMsaGamertagsOnly = $in->getBool();
+		$this->isFromWorldTemplate = $in->getBool();
+		$this->isWorldTemplateOptionLocked = $in->getBool();
 
-		$this->levelId = $this->getString();
-		$this->worldName = $this->getString();
-		$this->premiumWorldTemplateId = $this->getString();
-		$this->isTrial = $this->getBool();
-		$this->currentTick = $this->getLLong();
+		$this->levelId = $in->getString();
+		$this->worldName = $in->getString();
+		$this->premiumWorldTemplateId = $in->getString();
+		$this->isTrial = $in->getBool();
+		$this->currentTick = $in->getLLong();
 
-		$this->enchantmentSeed = $this->getVarInt();
+		$this->enchantmentSeed = $in->getVarInt();
 
-		$count = $this->getUnsignedVarInt();
+		$count = $in->getUnsignedVarInt();
 		for($i = 0; $i < $count; ++$i){
-			$this->getString();
-			$this->getLShort();
+			$in->getString();
+			$in->getLShort();
 		}
 
-		$this->multiplayerCorrelationId = $this->getString();
+		$this->multiplayerCorrelationId = $in->getString();
 	}
 
-	protected function encodePayload() : void{
-		$this->putEntityUniqueId($this->entityUniqueId);
-		$this->putEntityRuntimeId($this->entityRuntimeId);
-		$this->putVarInt($this->playerGamemode);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putEntityUniqueId($this->entityUniqueId);
+		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putVarInt($this->playerGamemode);
 
-		$this->putVector3($this->playerPosition);
+		$out->putVector3($this->playerPosition);
 
-		$this->putLFloat($this->pitch);
-		$this->putLFloat($this->yaw);
+		$out->putLFloat($this->pitch);
+		$out->putLFloat($this->yaw);
 
 		//Level settings
-		$this->putVarInt($this->seed);
-		$this->putVarInt($this->dimension);
-		$this->putVarInt($this->generator);
-		$this->putVarInt($this->worldGamemode);
-		$this->putVarInt($this->difficulty);
-		$this->putBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
-		$this->putBool($this->hasAchievementsDisabled);
-		$this->putVarInt($this->time);
-		$this->putBool($this->eduMode);
-		$this->putBool($this->hasEduFeaturesEnabled);
-		$this->putLFloat($this->rainLevel);
-		$this->putLFloat($this->lightningLevel);
-		$this->putBool($this->isMultiplayerGame);
-		$this->putBool($this->hasLANBroadcast);
-		$this->putBool($this->hasXboxLiveBroadcast);
-		$this->putBool($this->commandsEnabled);
-		$this->putBool($this->isTexturePacksRequired);
-		$this->putGameRules($this->gameRules);
-		$this->putBool($this->hasBonusChestEnabled);
-		$this->putBool($this->hasStartWithMapEnabled);
-		$this->putBool($this->hasTrustPlayersEnabled);
-		$this->putVarInt($this->defaultPlayerPermission);
-		$this->putVarInt($this->xboxLiveBroadcastMode);
-		$this->putLInt($this->serverChunkTickRadius);
-		$this->putBool($this->hasPlatformBroadcast);
-		$this->putVarInt($this->platformBroadcastMode);
-		$this->putBool($this->xboxLiveBroadcastIntent);
-		$this->putBool($this->hasLockedBehaviorPack);
-		$this->putBool($this->hasLockedResourcePack);
-		$this->putBool($this->isFromLockedWorldTemplate);
-		$this->putBool($this->useMsaGamertagsOnly);
-		$this->putBool($this->isFromWorldTemplate);
-		$this->putBool($this->isWorldTemplateOptionLocked);
+		$out->putVarInt($this->seed);
+		$out->putVarInt($this->dimension);
+		$out->putVarInt($this->generator);
+		$out->putVarInt($this->worldGamemode);
+		$out->putVarInt($this->difficulty);
+		$out->putBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
+		$out->putBool($this->hasAchievementsDisabled);
+		$out->putVarInt($this->time);
+		$out->putBool($this->eduMode);
+		$out->putBool($this->hasEduFeaturesEnabled);
+		$out->putLFloat($this->rainLevel);
+		$out->putLFloat($this->lightningLevel);
+		$out->putBool($this->isMultiplayerGame);
+		$out->putBool($this->hasLANBroadcast);
+		$out->putBool($this->hasXboxLiveBroadcast);
+		$out->putBool($this->commandsEnabled);
+		$out->putBool($this->isTexturePacksRequired);
+		$out->putGameRules($this->gameRules);
+		$out->putBool($this->hasBonusChestEnabled);
+		$out->putBool($this->hasStartWithMapEnabled);
+		$out->putBool($this->hasTrustPlayersEnabled);
+		$out->putVarInt($this->defaultPlayerPermission);
+		$out->putVarInt($this->xboxLiveBroadcastMode);
+		$out->putLInt($this->serverChunkTickRadius);
+		$out->putBool($this->hasPlatformBroadcast);
+		$out->putVarInt($this->platformBroadcastMode);
+		$out->putBool($this->xboxLiveBroadcastIntent);
+		$out->putBool($this->hasLockedBehaviorPack);
+		$out->putBool($this->hasLockedResourcePack);
+		$out->putBool($this->isFromLockedWorldTemplate);
+		$out->putBool($this->useMsaGamertagsOnly);
+		$out->putBool($this->isFromWorldTemplate);
+		$out->putBool($this->isWorldTemplateOptionLocked);
 
-		$this->putString($this->levelId);
-		$this->putString($this->worldName);
-		$this->putString($this->premiumWorldTemplateId);
-		$this->putBool($this->isTrial);
-		$this->putLLong($this->currentTick);
+		$out->putString($this->levelId);
+		$out->putString($this->worldName);
+		$out->putString($this->premiumWorldTemplateId);
+		$out->putBool($this->isTrial);
+		$out->putLLong($this->currentTick);
 
-		$this->putVarInt($this->enchantmentSeed);
+		$out->putVarInt($this->enchantmentSeed);
 
 		if(self::$runtimeIdTable === null){
 			//this is a really nasty hack, but it'll do for now
@@ -267,9 +267,9 @@ class StartGamePacket extends DataPacket{
 			}
 			self::$runtimeIdTable = $stream->getBuffer();
 		}
-		$this->put(self::$runtimeIdTable);
+		$out->put(self::$runtimeIdTable);
 
-		$this->putString($this->multiplayerCorrelationId);
+		$out->putString($this->multiplayerCorrelationId);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

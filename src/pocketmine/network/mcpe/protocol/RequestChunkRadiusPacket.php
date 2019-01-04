@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class RequestChunkRadiusPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::REQUEST_CHUNK_RADIUS_PACKET;
@@ -34,12 +35,12 @@ class RequestChunkRadiusPacket extends DataPacket{
 	/** @var int */
 	public $radius;
 
-	protected function decodePayload() : void{
-		$this->radius = $this->getVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->radius = $in->getVarInt();
 	}
 
-	protected function encodePayload() : void{
-		$this->putVarInt($this->radius);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putVarInt($this->radius);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

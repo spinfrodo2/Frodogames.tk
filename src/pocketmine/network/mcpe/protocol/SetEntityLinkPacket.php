@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 
 class SetEntityLinkPacket extends DataPacket{
@@ -35,12 +36,12 @@ class SetEntityLinkPacket extends DataPacket{
 	/** @var EntityLink */
 	public $link;
 
-	protected function decodePayload() : void{
-		$this->link = $this->getEntityLink();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->link = $in->getEntityLink();
 	}
 
-	protected function encodePayload() : void{
-		$this->putEntityLink($this->link);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putEntityLink($this->link);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

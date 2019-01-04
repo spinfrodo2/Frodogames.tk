@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class SetDifficultyPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_DIFFICULTY_PACKET;
@@ -34,12 +35,12 @@ class SetDifficultyPacket extends DataPacket{
 	/** @var int */
 	public $difficulty;
 
-	protected function decodePayload() : void{
-		$this->difficulty = $this->getUnsignedVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->difficulty = $in->getUnsignedVarInt();
 	}
 
-	protected function encodePayload() : void{
-		$this->putUnsignedVarInt($this->difficulty);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putUnsignedVarInt($this->difficulty);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

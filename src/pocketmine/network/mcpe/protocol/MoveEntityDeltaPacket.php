@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class MoveEntityDeltaPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::MOVE_ENTITY_DELTA_PACKET;
@@ -54,52 +55,52 @@ class MoveEntityDeltaPacket extends DataPacket{
 	/** @var float */
 	public $zRot = 0.0;
 
-	private function maybeReadCoord(int $flag) : int{
+	private function maybeReadCoord(NetworkBinaryStream $in, int $flag) : int{
 		if($this->flags & $flag){
-			return $this->getVarInt();
+			return $in->getVarInt();
 		}
 		return 0;
 	}
 
-	private function maybeReadRotation(int $flag) : float{
+	private function maybeReadRotation(NetworkBinaryStream $in, int $flag) : float{
 		if($this->flags & $flag){
-			return $this->getByteRotation();
+			return $in->getByteRotation();
 		}
 		return 0.0;
 	}
 
-	protected function decodePayload() : void{
-		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->flags = $this->getByte();
-		$this->xDiff = $this->maybeReadCoord(self::FLAG_HAS_X);
-		$this->yDiff = $this->maybeReadCoord(self::FLAG_HAS_Y);
-		$this->zDiff = $this->maybeReadCoord(self::FLAG_HAS_Z);
-		$this->xRot = $this->maybeReadRotation(self::FLAG_HAS_ROT_X);
-		$this->yRot = $this->maybeReadRotation(self::FLAG_HAS_ROT_Y);
-		$this->zRot = $this->maybeReadRotation(self::FLAG_HAS_ROT_Z);
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->flags = $in->getByte();
+		$this->xDiff = $this->maybeReadCoord($in, self::FLAG_HAS_X);
+		$this->yDiff = $this->maybeReadCoord($in, self::FLAG_HAS_Y);
+		$this->zDiff = $this->maybeReadCoord($in, self::FLAG_HAS_Z);
+		$this->xRot = $this->maybeReadRotation($in, self::FLAG_HAS_ROT_X);
+		$this->yRot = $this->maybeReadRotation($in, self::FLAG_HAS_ROT_Y);
+		$this->zRot = $this->maybeReadRotation($in, self::FLAG_HAS_ROT_Z);
 	}
 
-	private function maybeWriteCoord(int $flag, int $val) : void{
+	private function maybeWriteCoord(NetworkBinaryStream $out, int $flag, int $val) : void{
 		if($this->flags & $flag){
-			$this->putVarInt($val);
+			$out->putVarInt($val);
 		}
 	}
 
-	private function maybeWriteRotation(int $flag, float $val) : void{
+	private function maybeWriteRotation(NetworkBinaryStream $out, int $flag, float $val) : void{
 		if($this->flags & $flag){
-			$this->putByteRotation($val);
+			$out->putByteRotation($val);
 		}
 	}
 
-	protected function encodePayload() : void{
-		$this->putEntityRuntimeId($this->entityRuntimeId);
-		$this->putByte($this->flags);
-		$this->maybeWriteCoord(self::FLAG_HAS_X, $this->xDiff);
-		$this->maybeWriteCoord(self::FLAG_HAS_Y, $this->yDiff);
-		$this->maybeWriteCoord(self::FLAG_HAS_Z, $this->zDiff);
-		$this->maybeWriteRotation(self::FLAG_HAS_ROT_X, $this->xRot);
-		$this->maybeWriteRotation(self::FLAG_HAS_ROT_Y, $this->yRot);
-		$this->maybeWriteRotation(self::FLAG_HAS_ROT_Z, $this->zRot);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putByte($this->flags);
+		$this->maybeWriteCoord($out, self::FLAG_HAS_X, $this->xDiff);
+		$this->maybeWriteCoord($out, self::FLAG_HAS_Y, $this->yDiff);
+		$this->maybeWriteCoord($out, self::FLAG_HAS_Z, $this->zDiff);
+		$this->maybeWriteRotation($out, self::FLAG_HAS_ROT_X, $this->xRot);
+		$this->maybeWriteRotation($out, self::FLAG_HAS_ROT_Y, $this->yRot);
+		$this->maybeWriteRotation($out, self::FLAG_HAS_ROT_Z, $this->zRot);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

@@ -28,6 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\item\Item;
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class MobArmorEquipmentPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::MOB_ARMOR_EQUIPMENT_PACKET;
@@ -37,17 +38,17 @@ class MobArmorEquipmentPacket extends DataPacket{
 	/** @var Item[] */
 	public $slots = [];
 
-	protected function decodePayload() : void{
-		$this->entityRuntimeId = $this->getEntityRuntimeId();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->entityRuntimeId = $in->getEntityRuntimeId();
 		for($i = 0; $i < 4; ++$i){
-			$this->slots[$i] = $this->getSlot();
+			$this->slots[$i] = $in->getSlot();
 		}
 	}
 
-	protected function encodePayload() : void{
-		$this->putEntityRuntimeId($this->entityRuntimeId);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putEntityRuntimeId($this->entityRuntimeId);
 		for($i = 0; $i < 4; ++$i){
-			$this->putSlot($this->slots[$i]);
+			$out->putSlot($this->slots[$i]);
 		}
 	}
 

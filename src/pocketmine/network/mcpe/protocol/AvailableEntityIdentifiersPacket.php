@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use function base64_decode;
 
 class AvailableEntityIdentifiersPacket extends DataPacket{
@@ -40,12 +41,12 @@ class AvailableEntityIdentifiersPacket extends DataPacket{
 	/** @var string */
 	public $namedtag;
 
-	protected function decodePayload() : void{
-		$this->namedtag = $this->getRemaining();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->namedtag = $in->getRemaining();
 	}
 
-	protected function encodePayload() : void{
-		$this->put($this->namedtag ?? base64_decode(self::HARDCODED_NBT_BLOB));
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->put($this->namedtag ?? base64_decode(self::HARDCODED_NBT_BLOB));
 	}
 
 	public function handle(SessionHandler $handler) : bool{

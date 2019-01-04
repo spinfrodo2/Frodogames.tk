@@ -55,64 +55,64 @@ class CraftingDataPacket extends DataPacket{
 
 	public $decodedEntries = [];
 
-	protected function decodePayload() : void{
+	protected function decodePayload(NetworkBinaryStream $in) : void{
 		$this->decodedEntries = [];
-		$recipeCount = $this->getUnsignedVarInt();
+		$recipeCount = $in->getUnsignedVarInt();
 		for($i = 0; $i < $recipeCount; ++$i){
 			$entry = [];
-			$entry["type"] = $recipeType = $this->getVarInt();
+			$entry["type"] = $recipeType = $in->getVarInt();
 
 			switch($recipeType){
 				case self::ENTRY_SHAPELESS:
 				case self::ENTRY_SHULKER_BOX:
 				case self::ENTRY_SHAPELESS_CHEMISTRY:
-					$ingredientCount = $this->getUnsignedVarInt();
+					$ingredientCount = $in->getUnsignedVarInt();
 					/** @var Item */
 					$entry["input"] = [];
 					for($j = 0; $j < $ingredientCount; ++$j){
-						$entry["input"][] = $this->getSlot();
+						$entry["input"][] = $in->getSlot();
 					}
-					$resultCount = $this->getUnsignedVarInt();
+					$resultCount = $in->getUnsignedVarInt();
 					$entry["output"] = [];
 					for($k = 0; $k < $resultCount; ++$k){
-						$entry["output"][] = $this->getSlot();
+						$entry["output"][] = $in->getSlot();
 					}
-					$entry["uuid"] = $this->getUUID()->toString();
+					$entry["uuid"] = $in->getUUID()->toString();
 
 					break;
 				case self::ENTRY_SHAPED:
 				case self::ENTRY_SHAPED_CHEMISTRY:
-					$entry["width"] = $this->getVarInt();
-					$entry["height"] = $this->getVarInt();
+					$entry["width"] = $in->getVarInt();
+					$entry["height"] = $in->getVarInt();
 					$count = $entry["width"] * $entry["height"];
 					$entry["input"] = [];
 					for($j = 0; $j < $count; ++$j){
-						$entry["input"][] = $this->getSlot();
+						$entry["input"][] = $in->getSlot();
 					}
-					$resultCount = $this->getUnsignedVarInt();
+					$resultCount = $in->getUnsignedVarInt();
 					$entry["output"] = [];
 					for($k = 0; $k < $resultCount; ++$k){
-						$entry["output"][] = $this->getSlot();
+						$entry["output"][] = $in->getSlot();
 					}
-					$entry["uuid"] = $this->getUUID()->toString();
+					$entry["uuid"] = $in->getUUID()->toString();
 					break;
 				case self::ENTRY_FURNACE:
 				case self::ENTRY_FURNACE_DATA:
-					$entry["inputId"] = $this->getVarInt();
+					$entry["inputId"] = $in->getVarInt();
 					if($recipeType === self::ENTRY_FURNACE_DATA){
-						$entry["inputDamage"] = $this->getVarInt();
+						$entry["inputDamage"] = $in->getVarInt();
 					}
-					$entry["output"] = $this->getSlot();
+					$entry["output"] = $in->getSlot();
 					break;
 				case self::ENTRY_MULTI:
-					$entry["uuid"] = $this->getUUID()->toString();
+					$entry["uuid"] = $in->getUUID()->toString();
 					break;
 				default:
 					throw new BadPacketException("Unhandled recipe type $recipeType!"); //do not continue attempting to decode
 			}
 			$this->decodedEntries[] = $entry;
 		}
-		$this->getBool(); //cleanRecipes
+		$in->getBool(); //cleanRecipes
 	}
 
 	private static function writeEntry($entry, NetworkBinaryStream $stream) : int{
@@ -193,23 +193,23 @@ class CraftingDataPacket extends DataPacket{
 		$this->entries[] = $recipe;
 	}
 
-	protected function encodePayload() : void{
-		$this->putUnsignedVarInt(count($this->entries));
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putUnsignedVarInt(count($this->entries));
 
 		$writer = new NetworkBinaryStream();
 		foreach($this->entries as $d){
 			$entryType = self::writeEntry($d, $writer);
 			if($entryType >= 0){
-				$this->putVarInt($entryType);
-				$this->put($writer->getBuffer());
+				$out->putVarInt($entryType);
+				$out->put($writer->getBuffer());
 			}else{
-				$this->putVarInt(-1);
+				$out->putVarInt(-1);
 			}
 
 			$writer->reset();
 		}
 
-		$this->putBool($this->cleanRecipes);
+		$out->putBool($this->cleanRecipes);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

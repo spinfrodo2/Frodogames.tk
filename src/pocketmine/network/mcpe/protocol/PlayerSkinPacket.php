@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\entity\Skin;
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\utils\UUID;
 
 class PlayerSkinPacket extends DataPacket{
@@ -43,34 +44,34 @@ class PlayerSkinPacket extends DataPacket{
 	/** @var bool */
 	public $premiumSkin = false;
 
-	protected function decodePayload() : void{
-		$this->uuid = $this->getUUID();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->uuid = $in->getUUID();
 
-		$skinId = $this->getString();
-		$this->newSkinName = $this->getString();
-		$this->oldSkinName = $this->getString();
-		$skinData = $this->getString();
-		$capeData = $this->getString();
-		$geometryModel = $this->getString();
-		$geometryData = $this->getString();
+		$skinId = $in->getString();
+		$this->newSkinName = $in->getString();
+		$this->oldSkinName = $in->getString();
+		$skinData = $in->getString();
+		$capeData = $in->getString();
+		$geometryModel = $in->getString();
+		$geometryData = $in->getString();
 
 		$this->skin = new Skin($skinId, $skinData, $capeData, $geometryModel, $geometryData);
 
-		$this->premiumSkin = $this->getBool();
+		$this->premiumSkin = $in->getBool();
 	}
 
-	protected function encodePayload() : void{
-		$this->putUUID($this->uuid);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putUUID($this->uuid);
 
-		$this->putString($this->skin->getSkinId());
-		$this->putString($this->newSkinName);
-		$this->putString($this->oldSkinName);
-		$this->putString($this->skin->getSkinData());
-		$this->putString($this->skin->getCapeData());
-		$this->putString($this->skin->getGeometryName());
-		$this->putString($this->skin->getGeometryData());
+		$out->putString($this->skin->getSkinId());
+		$out->putString($this->newSkinName);
+		$out->putString($this->oldSkinName);
+		$out->putString($this->skin->getSkinData());
+		$out->putString($this->skin->getCapeData());
+		$out->putString($this->skin->getGeometryName());
+		$out->putString($this->skin->getGeometryData());
 
-		$this->putBool($this->premiumSkin);
+		$out->putBool($this->premiumSkin);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

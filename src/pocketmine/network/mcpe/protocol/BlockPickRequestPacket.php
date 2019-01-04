@@ -28,6 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class BlockPickRequestPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::BLOCK_PICK_REQUEST_PACKET;
@@ -43,16 +44,16 @@ class BlockPickRequestPacket extends DataPacket{
 	/** @var int */
 	public $hotbarSlot;
 
-	protected function decodePayload() : void{
-		$this->getSignedBlockPosition($this->blockX, $this->blockY, $this->blockZ);
-		$this->addUserData = $this->getBool();
-		$this->hotbarSlot = $this->getByte();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$in->getSignedBlockPosition($this->blockX, $this->blockY, $this->blockZ);
+		$this->addUserData = $in->getBool();
+		$this->hotbarSlot = $in->getByte();
 	}
 
-	protected function encodePayload() : void{
-		$this->putSignedBlockPosition($this->blockX, $this->blockY, $this->blockZ);
-		$this->putBool($this->addUserData);
-		$this->putByte($this->hotbarSlot);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putSignedBlockPosition($this->blockX, $this->blockY, $this->blockZ);
+		$out->putBool($this->addUserData);
+		$out->putByte($this->hotbarSlot);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

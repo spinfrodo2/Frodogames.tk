@@ -495,7 +495,7 @@ class NetworkBinaryStream extends BinaryStream{
 	/**
 	 * @return EntityLink
 	 */
-	protected function getEntityLink() : EntityLink{
+	public function getEntityLink() : EntityLink{
 		$link = new EntityLink();
 
 		$link->fromEntityUniqueId = $this->getEntityUniqueId();
@@ -509,14 +509,14 @@ class NetworkBinaryStream extends BinaryStream{
 	/**
 	 * @param EntityLink $link
 	 */
-	protected function putEntityLink(EntityLink $link) : void{
+	public function putEntityLink(EntityLink $link) : void{
 		$this->putEntityUniqueId($link->fromEntityUniqueId);
 		$this->putEntityUniqueId($link->toEntityUniqueId);
 		$this->putByte($link->type);
 		$this->putBool($link->immediate);
 	}
 
-	protected function getCommandOriginData() : CommandOriginData{
+	public function getCommandOriginData() : CommandOriginData{
 		$result = new CommandOriginData();
 
 		$result->type = $this->getUnsignedVarInt();
@@ -530,7 +530,7 @@ class NetworkBinaryStream extends BinaryStream{
 		return $result;
 	}
 
-	protected function putCommandOriginData(CommandOriginData $data) : void{
+	public function putCommandOriginData(CommandOriginData $data) : void{
 		$this->putUnsignedVarInt($data->type);
 		$this->putUUID($data->uuid);
 		$this->putString($data->requestId);

@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class SetEntityDataPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_ENTITY_DATA_PACKET;
@@ -36,14 +37,14 @@ class SetEntityDataPacket extends DataPacket{
 	/** @var array */
 	public $metadata;
 
-	protected function decodePayload() : void{
-		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->metadata = $this->getEntityMetadata();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->metadata = $in->getEntityMetadata();
 	}
 
-	protected function encodePayload() : void{
-		$this->putEntityRuntimeId($this->entityRuntimeId);
-		$this->putEntityMetadata($this->metadata);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putEntityMetadata($this->metadata);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

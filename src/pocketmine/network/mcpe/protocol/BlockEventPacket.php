@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class BlockEventPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::BLOCK_EVENT_PACKET;
@@ -42,16 +43,16 @@ class BlockEventPacket extends DataPacket{
 	/** @var int */
 	public $eventData;
 
-	protected function decodePayload() : void{
-		$this->getBlockPosition($this->x, $this->y, $this->z);
-		$this->eventType = $this->getVarInt();
-		$this->eventData = $this->getVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$in->getBlockPosition($this->x, $this->y, $this->z);
+		$this->eventType = $in->getVarInt();
+		$this->eventData = $in->getVarInt();
 	}
 
-	protected function encodePayload() : void{
-		$this->putBlockPosition($this->x, $this->y, $this->z);
-		$this->putVarInt($this->eventType);
-		$this->putVarInt($this->eventData);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putBlockPosition($this->x, $this->y, $this->z);
+		$out->putVarInt($this->eventType);
+		$out->putVarInt($this->eventData);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

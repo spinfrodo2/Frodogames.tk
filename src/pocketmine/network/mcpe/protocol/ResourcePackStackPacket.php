@@ -28,6 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\resourcepacks\ResourcePack;
 use function count;
 
@@ -45,43 +46,43 @@ class ResourcePackStackPacket extends DataPacket{
 	/** @var bool */
 	public $isExperimental = false;
 
-	protected function decodePayload() : void{
-		$this->mustAccept = $this->getBool();
-		$behaviorPackCount = $this->getUnsignedVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->mustAccept = $in->getBool();
+		$behaviorPackCount = $in->getUnsignedVarInt();
 		while($behaviorPackCount-- > 0){
-			$this->getString();
-			$this->getString();
-			$this->getString();
+			$in->getString();
+			$in->getString();
+			$in->getString();
 		}
 
-		$resourcePackCount = $this->getUnsignedVarInt();
+		$resourcePackCount = $in->getUnsignedVarInt();
 		while($resourcePackCount-- > 0){
-			$this->getString();
-			$this->getString();
-			$this->getString();
+			$in->getString();
+			$in->getString();
+			$in->getString();
 		}
 
-		$this->isExperimental = $this->getBool();
+		$this->isExperimental = $in->getBool();
 	}
 
-	protected function encodePayload() : void{
-		$this->putBool($this->mustAccept);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putBool($this->mustAccept);
 
-		$this->putUnsignedVarInt(count($this->behaviorPackStack));
+		$out->putUnsignedVarInt(count($this->behaviorPackStack));
 		foreach($this->behaviorPackStack as $entry){
-			$this->putString($entry->getPackId());
-			$this->putString($entry->getPackVersion());
-			$this->putString(""); //TODO: subpack name
+			$out->putString($entry->getPackId());
+			$out->putString($entry->getPackVersion());
+			$out->putString(""); //TODO: subpack name
 		}
 
-		$this->putUnsignedVarInt(count($this->resourcePackStack));
+		$out->putUnsignedVarInt(count($this->resourcePackStack));
 		foreach($this->resourcePackStack as $entry){
-			$this->putString($entry->getPackId());
-			$this->putString($entry->getPackVersion());
-			$this->putString(""); //TODO: subpack name
+			$out->putString($entry->getPackId());
+			$out->putString($entry->getPackVersion());
+			$out->putString(""); //TODO: subpack name
 		}
 
-		$this->putBool($this->isExperimental);
+		$out->putBool($this->isExperimental);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

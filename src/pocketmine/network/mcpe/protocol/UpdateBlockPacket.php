@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class UpdateBlockPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_BLOCK_PACKET;
@@ -51,18 +52,18 @@ class UpdateBlockPacket extends DataPacket{
 	/** @var int */
 	public $dataLayerId = self::DATA_LAYER_NORMAL;
 
-	protected function decodePayload() : void{
-		$this->getBlockPosition($this->x, $this->y, $this->z);
-		$this->blockRuntimeId = $this->getUnsignedVarInt();
-		$this->flags = $this->getUnsignedVarInt();
-		$this->dataLayerId = $this->getUnsignedVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$in->getBlockPosition($this->x, $this->y, $this->z);
+		$this->blockRuntimeId = $in->getUnsignedVarInt();
+		$this->flags = $in->getUnsignedVarInt();
+		$this->dataLayerId = $in->getUnsignedVarInt();
 	}
 
-	protected function encodePayload() : void{
-		$this->putBlockPosition($this->x, $this->y, $this->z);
-		$this->putUnsignedVarInt($this->blockRuntimeId);
-		$this->putUnsignedVarInt($this->flags);
-		$this->putUnsignedVarInt($this->dataLayerId);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putBlockPosition($this->x, $this->y, $this->z);
+		$out->putUnsignedVarInt($this->blockRuntimeId);
+		$out->putUnsignedVarInt($this->flags);
+		$out->putUnsignedVarInt($this->dataLayerId);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

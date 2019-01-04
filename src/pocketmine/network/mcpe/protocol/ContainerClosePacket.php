@@ -27,6 +27,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class ContainerClosePacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::CONTAINER_CLOSE_PACKET;
@@ -34,12 +35,12 @@ class ContainerClosePacket extends DataPacket{
 	/** @var int */
 	public $windowId;
 
-	protected function decodePayload() : void{
-		$this->windowId = $this->getByte();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->windowId = $in->getByte();
 	}
 
-	protected function encodePayload() : void{
-		$this->putByte($this->windowId);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putByte($this->windowId);
 	}
 
 	public function handle(SessionHandler $handler) : bool{

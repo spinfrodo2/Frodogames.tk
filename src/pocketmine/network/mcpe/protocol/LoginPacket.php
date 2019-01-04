@@ -30,6 +30,7 @@ use Particle\Validator\Validator;
 use pocketmine\entity\Skin;
 use pocketmine\network\BadPacketException;
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\PlayerInfo;
 use pocketmine\utils\BinaryStream;
 use pocketmine\utils\Utils;
@@ -92,9 +93,9 @@ class LoginPacket extends DataPacket{
 		return $this->protocol !== null and $this->protocol !== ProtocolInfo::CURRENT_PROTOCOL;
 	}
 
-	protected function decodePayload() : void{
-		$this->protocol = $this->getInt();
-		$this->decodeConnectionRequest();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->protocol = $in->getInt();
+		$this->decodeConnectionRequest($in);
 	}
 
 	/**
@@ -116,11 +117,13 @@ class LoginPacket extends DataPacket{
 	}
 
 	/**
+	 * @param NetworkBinaryStream $in
+	 *
 	 * @throws \OutOfBoundsException
 	 * @throws \UnexpectedValueException
 	 */
-	protected function decodeConnectionRequest() : void{
-		$buffer = new BinaryStream($this->getString());
+	protected function decodeConnectionRequest(NetworkBinaryStream $in) : void{
+		$buffer = new BinaryStream($in->getString());
 
 		$chainData = json_decode($buffer->get($buffer->getLInt()), true);
 		if(!is_array($chainData)){
@@ -191,7 +194,7 @@ class LoginPacket extends DataPacket{
 		);
 	}
 
-	protected function encodePayload() : void{
+	protected function encodePayload(NetworkBinaryStream $out) : void{
 		//TODO
 	}
 

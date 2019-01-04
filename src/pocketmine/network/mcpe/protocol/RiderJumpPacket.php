@@ -28,6 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 
 use pocketmine\network\mcpe\handler\SessionHandler;
+use pocketmine\network\mcpe\NetworkBinaryStream;
 
 class RiderJumpPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::RIDER_JUMP_PACKET;
@@ -35,12 +36,12 @@ class RiderJumpPacket extends DataPacket{
 	/** @var int */
 	public $jumpStrength; //percentage
 
-	protected function decodePayload() : void{
-		$this->jumpStrength = $this->getVarInt();
+	protected function decodePayload(NetworkBinaryStream $in) : void{
+		$this->jumpStrength = $in->getVarInt();
 	}
 
-	protected function encodePayload() : void{
-		$this->putVarInt($this->jumpStrength);
+	protected function encodePayload(NetworkBinaryStream $out) : void{
+		$out->putVarInt($this->jumpStrength);
 	}
 
 	public function handle(SessionHandler $handler) : bool{
