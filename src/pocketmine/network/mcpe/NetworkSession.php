@@ -220,10 +220,8 @@ class NetworkSession{
 	public function handleDataPacket(NetworkBinaryStream $buffer) : void{
 		$packet = PacketPool::getPacket($buffer);
 		if(!($packet instanceof ServerboundPacket)){
-			//TODO: ban IP (sending packets like this is an attack)
-			$this->server->getLogger()->debug("Unexpected " . $packet->getName() . " from " . $this->ip . " " . $this->port . ": 0x" . bin2hex($buffer->getBuffer()));
-			$this->disconnect("Unexpected non-serverbound packet");
-			return;
+			$this->server->getLogger()->debug($packet->getName() . " from " . $this->ip . " " . $this->port . ": " . bin2hex($buffer->getBuffer()));
+			throw new BadPacketException("Unexpected non-serverbound packet " . $packet->getName());
 		}
 
 		$timings = Timings::getReceiveDataPacketTimings($packet);
