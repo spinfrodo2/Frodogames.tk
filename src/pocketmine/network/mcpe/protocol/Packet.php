@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pocketmine\network\BadPacketException;
 use pocketmine\network\mcpe\handler\SessionHandler;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 
@@ -54,8 +55,7 @@ interface Packet{
 	/**
 	 * @param NetworkBinaryStream $in
 	 *
-	 * @throws \OutOfBoundsException
-	 * @throws \UnexpectedValueException
+	 * @throws BadPacketException
 	 */
 	public function decode(NetworkBinaryStream $in) : void;
 
@@ -77,6 +77,7 @@ interface Packet{
 	 * @param SessionHandler $handler
 	 *
 	 * @return bool true if the packet was handled successfully, false if not.
+	 * @throws BadPacketException if broken data was found in the packet
 	 */
 	public function handle(SessionHandler $handler) : bool;
 }
